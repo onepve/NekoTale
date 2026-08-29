@@ -48,6 +48,41 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
         Log.e(TAG, report);
 
+        // 1. 保存到手机公共存储 Download/NekoTale 目录（免权限、不受 Scoped Storage 限制、文件管理器直接可见）
+        try {
+            if (applicationContext != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    android.content.ContentValues values = new android.content.ContentValues();
+                    values.put(android.provider.MediaStore.Downloads.DISPLAY_NAME, "NekoTale_crash_dump.txt");
+                    values.put(android.provider.MediaStore.Downloads.MIME_TYPE, "text/plain");
+                    values.put(android.provider.MediaStore.Downloads.RELATIVE_PATH, android.os.Environment.DIRECTORY_DOWNLOADS + "/NekoTale");
+                    android.net.Uri uri = applicationContext.getContentResolver().insert(android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+                    if (uri != null) {
+                        try (java.io.OutputStream os = applicationContext.getContentResolver().openOutputStream(uri)) {
+                            if (os != null) {
+                                os.write(report.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                                os.flush();
+                            }
+                        }
+                    }
+                } else {
+                    File pubDownload = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS);
+                    if (pubDownload != null) {
+                        File nekoDir = new File(pubDownload, "NekoTale");
+                        nekoDir.mkdirs();
+                        File crashFile = new File(nekoDir, "crash_dump.txt");
+                        FileWriter writer = new FileWriter(crashFile, false);
+                        writer.write(report);
+                        writer.flush();
+                        writer.close();
+                    }
+                }
+            }
+        } catch (Throwable t) {
+            Log.e(TAG, "Failed to write crash dump to public Download", t);
+        }
+
+        // 2. 备用保存：App 私有目录
         try {
             if (applicationContext != null) {
                 File dir = applicationContext.getExternalFilesDir(null);

@@ -36,7 +36,7 @@ public class CrashActivity extends Activity {
         root.addView(title);
 
         TextView subtitle = new TextView(this);
-        subtitle.setText("应用在启动或运行时捕获到未处理异常，请点击下方「复制日志」反馈：");
+        subtitle.setText("应用捕获到异常，日志已存至「手机存储/Download/NekoTale/」，也可点击下方一键复制：");
         subtitle.setTextColor(0xFF94A3B8);
         subtitle.setTextSize(14);
         subtitle.setPadding(0, 0, 0, 24);
