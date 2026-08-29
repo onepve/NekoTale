@@ -300,8 +300,12 @@ public class ApplicationLoader extends Application {
 
         super.onCreate();
 
-        AnalyticsHelper.start(this);
-        ComponentsHelper.fixComponents(this);
+        try {
+            AnalyticsHelper.start(this);
+            ComponentsHelper.fixComponents(this);
+        } catch (Throwable t) {
+            FileLog.e(t);
+        }
 
         if (BuildVars.LOGS_ENABLED) {
             FileLog.d("app start time = " + (startTime = SystemClock.elapsedRealtime()));
