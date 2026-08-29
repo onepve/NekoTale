@@ -19,7 +19,6 @@ public class AnalyticsHelper {
             preferences = application.getSharedPreferences("nekoanalytics", Application.MODE_PRIVATE);
             analyticsDisabled = true;
             sendBugReport = false;
-            FileLog.d("Analytics: disabled completely for NekoTale");
         } catch (Throwable t) {
             FileLog.e(t);
         }
@@ -35,8 +34,16 @@ public class AnalyticsHelper {
         return false;
     }
 
+    public static void toggleSendBugReport() {
+        sendBugReport = false;
+    }
+
     public static void setSendBugReport(boolean value) {
         sendBugReport = false;
+    }
+
+    public static void setAnalyticsDisabled() {
+        analyticsDisabled = true;
     }
 
     public static void setAnalyticsDisabled(boolean value) {
