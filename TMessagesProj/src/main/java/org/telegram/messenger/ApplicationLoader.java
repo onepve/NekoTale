@@ -228,7 +228,11 @@ public class ApplicationLoader extends Application {
                 }
             };
             IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-            ApplicationLoader.applicationContext.registerReceiver(networkStateReceiver, filter);
+            if (Build.VERSION.SDK_INT >= 33) {
+                ApplicationLoader.applicationContext.registerReceiver(networkStateReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+            } else {
+                ApplicationLoader.applicationContext.registerReceiver(networkStateReceiver, filter);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -237,7 +241,11 @@ public class ApplicationLoader extends Application {
             final IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
             filter.addAction(Intent.ACTION_SCREEN_OFF);
             final BroadcastReceiver mReceiver = new ScreenReceiver();
-            applicationContext.registerReceiver(mReceiver, filter);
+            if (Build.VERSION.SDK_INT >= 33) {
+                applicationContext.registerReceiver(mReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+            } else {
+                applicationContext.registerReceiver(mReceiver, filter);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -294,6 +302,7 @@ public class ApplicationLoader extends Application {
         applicationLoaderInstance = this;
         try {
             applicationContext = getApplicationContext();
+            tw.nekomimi.nekogram.helpers.CrashHandler.init(applicationContext);
         } catch (Throwable ignore) {
 
         }
