@@ -61,8 +61,8 @@ public class UserConfig extends BaseController {
 
     public boolean notificationsSettingsLoaded;
     public boolean notificationsSignUpSettingsLoaded;
-    public boolean syncContacts = true;
-    public boolean suggestContacts = true;
+    public boolean syncContacts = false;
+    public boolean suggestContacts = false;
     public boolean showCallsTab;
     public boolean hasSecureData;
     public int loginTime;

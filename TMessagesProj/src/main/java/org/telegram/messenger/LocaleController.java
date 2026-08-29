@@ -700,6 +700,23 @@ public class LocaleController {
         languagesDict.put(localeInfo.getKey(), localeInfo);
         languagesDict.put("ja", localeInfo);
 
+        LocaleInfo zhHans = new LocaleInfo();
+        zhHans.name = "简体中文";
+        zhHans.nameEnglish = "Chinese (Simplified)";
+        zhHans.shortName = "zh_hans";
+        zhHans.baseLangCode = null;
+        zhHans.isRtl = false;
+        zhHans.pathToFile = "remote";
+        zhHans.pluralLangCode = "zh";
+        zhHans.serverIndex = Integer.MAX_VALUE;
+        languages.add(zhHans);
+        languagesDict.put(zhHans.getKey(), zhHans);
+        languagesDict.put("zh", zhHans);
+        languagesDict.put("zh-hans", zhHans);
+        languagesDict.put("zh_hans", zhHans);
+        languagesDict.put("zh_cn", zhHans);
+        languagesDict.put("zh-cn", zhHans);
+
         loadOtherLanguages();
         if (remoteLanguages.isEmpty()) {
             AndroidUtilities.runOnUIThread(() -> loadRemoteLanguages(UserConfig.selectedAccount));
@@ -755,11 +772,21 @@ public class LocaleController {
                 }
             }
 
+            if (currentInfo == null) {
+                String sysLang = systemDefaultLocale.getLanguage() != null ? systemDefaultLocale.getLanguage().toLowerCase() : "";
+                String sysLocStr = getLocaleString(systemDefaultLocale).toLowerCase();
+                if (sysLang.startsWith("zh") || sysLocStr.startsWith("zh")) {
+                    currentInfo = getLanguageFromDict("zh-hans");
+                }
+            }
             if (currentInfo == null && systemDefaultLocale.getLanguage() != null) {
                 currentInfo = getLanguageFromDict(systemDefaultLocale.getLanguage());
             }
             if (currentInfo == null) {
                 currentInfo = getLanguageFromDict(getLocaleString(systemDefaultLocale));
+                if (currentInfo == null) {
+                    currentInfo = getLanguageFromDict("zh-hans");
+                }
                 if (currentInfo == null) {
                     currentInfo = getLanguageFromDict("en");
                 }

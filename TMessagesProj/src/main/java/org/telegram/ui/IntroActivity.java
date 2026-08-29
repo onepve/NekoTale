@@ -36,6 +36,7 @@ import android.os.Looper;
 import android.os.Parcelable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ImageSpan;
 import android.util.TypedValue;
 import android.view.Display;
@@ -45,6 +46,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -76,6 +78,7 @@ import org.telegram.ui.ActionBar.ThemeColors;
 import org.telegram.ui.ActionBar.ThemeDescription;
 import org.telegram.ui.Components.BottomPagesView;
 import org.telegram.ui.Components.LayoutHelper;
+import org.telegram.ui.Components.ProxyDrawable;
 import org.telegram.ui.Components.RLottieDrawable;
 import org.telegram.ui.Components.RLottieImageView;
 import org.telegram.ui.Components.ScaleStateListAnimator;
@@ -106,6 +109,9 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
     private TextView startMessagingButton;
     private FrameLayout frameLayout2;
     private FrameLayout frameContainerView;
+
+    private ProxyDrawable introProxyDrawable;
+    private FrameLayout proxyFrameLayout;
 
     private RLottieDrawable darkThemeDrawable;
 
@@ -169,6 +175,14 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
         FrameLayout themeFrameLayout = new FrameLayout(context);
         themeFrameLayout.addView(themeIconView, LayoutHelper.createFrame(28, 28, Gravity.CENTER));
 
+        ImageView proxyIconView = new ImageView(context);
+        proxyFrameLayout = new FrameLayout(context);
+        introProxyDrawable = new ProxyDrawable(context);
+        proxyIconView.setImageDrawable(introProxyDrawable);
+        proxyFrameLayout.addView(proxyIconView, LayoutHelper.createFrame(28, 28, Gravity.CENTER));
+        proxyFrameLayout.setContentDescription(LocaleController.getString(R.string.ProxySettings));
+        proxyFrameLayout.setOnClickListener(v -> presentFragment(new ProxyListActivity()));
+
         int themeMargin = 4;
         frameContainerView = new FrameLayout(context) {
 
@@ -193,11 +207,16 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
                 x = (getMeasuredWidth() - switchLanguageTextView.getMeasuredWidth()) / 2;
                 switchLanguageTextView.layout(x, y - switchLanguageTextView.getMeasuredHeight(), x + switchLanguageTextView.getMeasuredWidth(), y);
 
-                MarginLayoutParams marginLayoutParams = (MarginLayoutParams) themeFrameLayout.getLayoutParams();
                 int newTopMargin = dp(themeMargin) + (AndroidUtilities.isTablet() ? 0 : AndroidUtilities.statusBarHeight);
+                MarginLayoutParams marginLayoutParams = (MarginLayoutParams) themeFrameLayout.getLayoutParams();
                 if (marginLayoutParams.topMargin != newTopMargin) {
                     marginLayoutParams.topMargin = newTopMargin;
                     themeFrameLayout.requestLayout();
+                }
+                MarginLayoutParams proxyParams = (MarginLayoutParams) proxyFrameLayout.getLayoutParams();
+                if (proxyParams.topMargin != newTopMargin) {
+                    proxyParams.topMargin = newTopMargin;
+                    proxyFrameLayout.requestLayout();
                 }
             }
         };
@@ -423,14 +442,18 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
         });
 
         frameContainerView.addView(themeFrameLayout, LayoutHelper.createFrame(64, 64, Gravity.TOP | Gravity.RIGHT, 0, themeMargin, themeMargin, 0));
+        frameContainerView.addView(proxyFrameLayout, LayoutHelper.createFrame(64, 64, Gravity.TOP | Gravity.LEFT, themeMargin, themeMargin, 0, 0));
 
         fragmentView = scrollView;
 
         NotificationCenter.getGlobalInstance().addObserver(this, NotificationCenter.suggestedLangpack);
         NotificationCenter.getInstance(currentAccount).addObserver(this, NotificationCenter.configLoaded);
+        NotificationCenter.getGlobalInstance().addObserver(this, NotificationCenter.proxySettingsChanged);
+        NotificationCenter.getGlobalInstance().addObserver(this, NotificationCenter.didUpdateConnectionState);
         ConnectionsManager.getInstance(currentAccount).updateDcSettings();
         LocaleController.getInstance().loadRemoteLanguages(currentAccount);
         checkContinueText();
+        updateIntroProxyButton(false);
         justCreated = true;
 
         updateColors(false);
@@ -472,7 +495,19 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
         destroyed = true;
         NotificationCenter.getGlobalInstance().removeObserver(this, NotificationCenter.suggestedLangpack);
         NotificationCenter.getInstance(currentAccount).removeObserver(this, NotificationCenter.configLoaded);
+        NotificationCenter.getGlobalInstance().removeObserver(this, NotificationCenter.proxySettingsChanged);
+        NotificationCenter.getGlobalInstance().removeObserver(this, NotificationCenter.didUpdateConnectionState);
         MessagesController.getGlobalMainSettings().edit().putLong("intro_crashed_time", 0).apply();
+    }
+
+    private void updateIntroProxyButton(boolean animated) {
+        if (introProxyDrawable == null) return;
+        SharedPreferences preferences = MessagesController.getGlobalMainSettings();
+        String proxyAddress = preferences.getString("proxy_ip", "");
+        final boolean proxyEnabled = preferences.getBoolean("proxy_enabled", false) && !TextUtils.isEmpty(proxyAddress);
+        final int currentConnectionState = ConnectionsManager.getInstance(currentAccount).getConnectionState();
+        final boolean connected = currentConnectionState == ConnectionsManager.ConnectionStateConnected || currentConnectionState == ConnectionsManager.ConnectionStateUpdating;
+        introProxyDrawable.setConnected(proxyEnabled, connected, animated);
     }
 
     private void checkContinueText() {
@@ -538,6 +573,8 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
     public void didReceivedNotification(int id, int account, Object... args) {
         if (id == NotificationCenter.suggestedLangpack || id == NotificationCenter.configLoaded) {
             checkContinueText();
+        } else if (id == NotificationCenter.proxySettingsChanged || id == NotificationCenter.didUpdateConnectionState) {
+            updateIntroProxyButton(true);
         }
     }
 
@@ -961,6 +998,12 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
     }
 
     private void updateColors(boolean fromTheme) {
+        if (introProxyDrawable != null) {
+            introProxyDrawable.setColorFilter(new PorterDuffColorFilter(Theme.getColor(Theme.key_windowBackgroundWhiteBlackText), PorterDuff.Mode.SRC_IN));
+        }
+        if (proxyFrameLayout != null) {
+            proxyFrameLayout.setBackground(Theme.createSelectorDrawable(Theme.getColor(Theme.key_listSelector)));
+        }
         startMessagingButtonBackground.setColors(new int[]{getThemedColor(Theme.key_featuredStickers_addButton), getThemedColor(Theme.key_featuredStickers_addButton2)});
         //logoDrawable.setColorFilter(Theme.multAlpha(getThemedColor(Theme.key_actionBarDefaultTitle), 0.9f), PorterDuff.Mode.MULTIPLY);
         fragmentView.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));

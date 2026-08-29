@@ -330,4 +330,35 @@
     <string name="JsonCopyValue">复制值</string>
     <!-- Accessibility -->
     <string name="AccessibilitySettings">无障碍设置</string>
+
+    <!-- App & Intro & Login Core Strings -->
+    <string name="StartMessaging">开始使用</string>
+    <string name="Page1Title">猫猫物语</string>
+    <string name="Page2Title">极速</string>
+    <string name="Page3Title">免费</string>
+    <string name="Page4Title">强大</string>
+    <string name="Page5Title">安全</string>
+    <string name="Page6Title">基于云端</string>
+    <string name="Page1Message">极速、纯净、安全的专属即时通讯应用。</string>
+    <string name="Page2Message">**猫猫物语** 能够极速传递每一条消息。</string>
+    <string name="Page3Message">**猫猫物语** 永久免费，零广告插播。</string>
+    <string name="Page4Message">**猫猫物语** 对媒体和聊天的大小不设限制。</string>
+    <string name="Page5Message">**猫猫物语** 保护你的消息与隐私安全。</string>
+    <string name="Page6Message">**猫猫物语** 允许你在多台设备上随时访问消息。</string>
+    <string name="YourPhone">你的手机号码</string>
+    <string name="StartText">请确认国家代码并输入你的手机号码。</string>
+    <string name="ChooseCountry">选择国家/地区</string>
+    <string name="Search">搜索</string>
+    <string name="OK">确定</string>
+    <string name="Cancel">取消</string>
+    <string name="Done">完成</string>
+    <string name="Close">关闭</string>
+    <string name="Next">下一步</string>
+    <string name="Continue">继续</string>
+    <string name="PleaseEnterCode">请输入验证码</string>
+    <string name="Code">验证码</string>
+    <string name="Connecting">连接中...</string>
+    <string name="WaitingForNetwork">等待网络...</string>
+    <string name="Updating">更新中...</string>
+    <string name="Language">语言</string>
 </resources>
