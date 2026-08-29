@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="AppNameNeko" translatable="false">@string/Nekogram</string>
-    <string name="Nekogram" translatable="false">Nekogram</string>
-    <string name="NekogramBeta" translatable="false">Nekogram Beta</string>
-    <string name="NekoSettings">Neko Settings</string>
+    <string name="AppNameNeko" translatable="false">猫猫物语</string>
+    <string name="Nekogram" translatable="false">NekoTale</string>
+    <string name="NekogramBeta" translatable="false">NekoTale Beta</string>
+    <string name="NekoSettings">猫猫设置</string>
     <string name="PreferIPv6">Prefer connecting through IPv6</string>
     <string name="MessageMenu">Message menu</string>
     <string name="HidePhone">Hide my phone number</string>

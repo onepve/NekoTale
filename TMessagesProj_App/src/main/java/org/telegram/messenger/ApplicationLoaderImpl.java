@@ -14,6 +14,15 @@ import tw.nekomimi.nekogram.Extra;
 
 public class ApplicationLoaderImpl extends ApplicationLoader {
     @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        try {
+            tw.nekomimi.nekogram.helpers.CrashHandler.init(base);
+        } catch (Throwable ignore) {
+        }
+    }
+
+    @Override
     protected String onGetApplicationId() {
         return BuildConfig.APPLICATION_ID;
     }

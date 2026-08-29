@@ -4664,7 +4664,15 @@ public class VoIPService extends Service implements SensorEventListener, AudioMa
 				filter.addAction(Intent.ACTION_SCREEN_ON);
 				filter.addAction(Intent.ACTION_SCREEN_OFF);
 			}
-			registerReceiver(receiver, filter);
+			try {
+				if (Build.VERSION.SDK_INT >= 33) {
+					registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED);
+				} else {
+					registerReceiver(receiver, filter);
+				}
+			} catch (Throwable t) {
+				FileLog.e(t);
+			}
 			fetchBluetoothDeviceName();
 
 			if (audioDeviceCallback == null) {

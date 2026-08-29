@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="NekoSettings">喵设置</string>
+    <string name="NekoSettings">猫猫设置</string>
     <string name="PreferIPv6">优先通过 IPv6 连接</string>
     <string name="MessageMenu">消息菜单</string>
-    <string name="HidePhone">隐藏您的手机号码</string>
+    <string name="HidePhone">隐藏你的手机号码</string>
     <string name="DeleteAllFromSelf">删除自己的消息</string>
-    <string name="DeleteAllFromSelfAlert">警告！这将为此会话中的 **所有人** 删除 **全部您发出的消息**。</string>
-    <string name="DeleteAllFromSelfAlertBefore">警告！这将为此会话中的 **所有人** 删除 **全部您在%s前发出的消息**。</string>
+    <string name="DeleteAllFromSelfAlert">警告！这将为此会话中的 **所有人** 删除 **全部你发出的消息**。</string>
+    <string name="DeleteAllFromSelfAlertBefore">警告！这将为此会话中的 **所有人** 删除 **全部你在%s前发出的消息**。</string>
     <string name="DeleteAllFromSelfBefore">早于...</string>
     <string name="IgnoreBlocked">隐藏来自已屏蔽用户的消息</string>
     <string name="Connection">连接</string>
