@@ -79,6 +79,8 @@ import org.telegram.ui.ActionBar.ThemeDescription;
 import org.telegram.ui.Components.BottomPagesView;
 import org.telegram.ui.Components.LayoutHelper;
 import org.telegram.ui.Components.ProxyDrawable;
+import org.telegram.ui.Components.ItemOptions;
+import org.telegram.messenger.browser.Browser;
 import org.telegram.ui.Components.RLottieDrawable;
 import org.telegram.ui.Components.RLottieImageView;
 import org.telegram.ui.Components.ScaleStateListAnimator;
@@ -181,7 +183,22 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
         proxyIconView.setImageDrawable(introProxyDrawable);
         proxyFrameLayout.addView(proxyIconView, LayoutHelper.createFrame(28, 28, Gravity.CENTER));
         proxyFrameLayout.setContentDescription(LocaleController.getString(R.string.ProxySettings));
-        proxyFrameLayout.setOnClickListener(v -> presentFragment(new ProxyListActivity()));
+        proxyFrameLayout.setOnClickListener(v -> {
+            ItemOptions.makeOptions(IntroActivity.this, proxyFrameLayout)
+                    .add(R.drawable.outline_shield_plain_24, LocaleController.getString(R.string.ProxySettings), () -> presentFragment(new ProxyListActivity()))
+                    .add(R.drawable.menu_website, "登录网站与节点", () -> {
+                        if (getParentActivity() == null) return;
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
+                        builder.setTitle("猫猫网络与节点");
+                        builder.setMessage("正在接入云工作台（yunbox.cc）与自建 Sing-box 加密隧道直连 TG DC1~DC5。后续在此直接登录面板账号并下发专属节点。");
+                        builder.setPositiveButton("访问控制台", (d, w) -> {
+                            Browser.openUrl(getParentActivity(), "https://yunbox.cc");
+                        });
+                        builder.setNegativeButton(LocaleController.getString(R.string.Close), null);
+                        showDialog(builder.create());
+                    })
+                    .show();
+        });
 
         int themeMargin = 4;
         frameContainerView = new FrameLayout(context) {
@@ -413,6 +430,7 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
         switchLanguageTextView = new TextView(context);
         switchLanguageTextView.setGravity(Gravity.CENTER);
         switchLanguageTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+        switchLanguageTextView.setVisibility(View.GONE);
         frameContainerView.addView(switchLanguageTextView, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, 30, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0, 0, 20));
         switchLanguageTextView.setOnClickListener(v -> {
             if (startPressed || localeInfo == null) {
@@ -511,6 +529,17 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
     }
 
     private void checkContinueText() {
+        LocaleController.LocaleInfo currentLocaleInfo = LocaleController.getInstance().getCurrentLocaleInfo();
+        String sysLang = LocaleController.getInstance().getSystemDefaultLocale().getLanguage();
+        boolean isZh = (sysLang != null && sysLang.toLowerCase().startsWith("zh"))
+                || (currentLocaleInfo != null && ("zh_hans".equals(currentLocaleInfo.shortName) || "zh".equals(currentLocaleInfo.pluralLangCode) || currentLocaleInfo.shortName.startsWith("zh")));
+        if (isZh) {
+            if (switchLanguageTextView != null) {
+                switchLanguageTextView.setVisibility(View.GONE);
+            }
+            return;
+        }
+
         LocaleController.LocaleInfo englishInfo = null;
         LocaleController.LocaleInfo systemInfo = null;
         LocaleController.LocaleInfo currentLocaleInfo = LocaleController.getInstance().getCurrentLocaleInfo();

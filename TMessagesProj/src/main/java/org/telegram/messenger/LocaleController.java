@@ -700,6 +700,18 @@ public class LocaleController {
         languagesDict.put(localeInfo.getKey(), localeInfo);
         languagesDict.put("ja", localeInfo);
 
+        File targetZh1 = new File(ApplicationLoader.getFilesDirFixed(), "remote_zh_hans.xml");
+        File targetZh2 = new File(ApplicationLoader.getFilesDirFixed(), "remote_zh-hans.xml");
+        if (!targetZh1.exists() || targetZh1.length() < 10000) {
+            try (java.io.InputStream is = ApplicationLoader.applicationContext.getAssets().open("zh-hans.xml");
+                 java.io.FileOutputStream os = new java.io.FileOutputStream(targetZh1)) {
+                AndroidUtilities.copyFile(is, os);
+                AndroidUtilities.copyFile(targetZh1, targetZh2);
+            } catch (Exception e) {
+                FileLog.e(e);
+            }
+        }
+
         LocaleInfo zhHans = new LocaleInfo();
         zhHans.name = "简体中文";
         zhHans.nameEnglish = "Chinese (Simplified)";
@@ -790,6 +802,12 @@ public class LocaleController {
                 if (currentInfo == null) {
                     currentInfo = getLanguageFromDict("en");
                 }
+            }
+            if (currentInfo == null) {
+                currentInfo = getLanguageFromDict("zh-hans");
+            }
+            if (lang == null && currentInfo != null) {
+                override = true;
             }
 
             applyLanguage(currentInfo, override, true, UserConfig.selectedAccount);

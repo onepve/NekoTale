@@ -762,11 +762,22 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
         moreButtonView.setIcon(R.drawable.ic_ab_other);
         moreButtonView.addSubItem(0, R.drawable.outline_shield_plain_24, getString(R.string.ProxySettings));
         moreButtonView.addSubItem(1, R.drawable.msg_qrcode, getString(R.string.QRLoginTitle));
+        moreButtonView.addSubItem(2, R.drawable.menu_website, "登录网站与节点");
         moreButtonView.setDelegate(id -> {
             if (id == 0) {
                 presentFragment(new ProxyListActivity());
             } else if (id == 1) {
                 setPage(VIEW_QR_LOGIN, true, null, false);
+            } else if (id == 2) {
+                if (getParentActivity() == null) return;
+                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
+                builder.setTitle("猫猫网络与节点");
+                builder.setMessage("正在接入云工作台（yunbox.cc）与自建 Sing-box 加密隧道直连 TG DC1~DC5。后续在此直接登录面板账号并下发专属节点。");
+                builder.setPositiveButton("访问控制台", (d, w) -> {
+                    org.telegram.messenger.browser.Browser.openUrl(getParentActivity(), "https://yunbox.cc");
+                });
+                builder.setNegativeButton(LocaleController.getString(R.string.Close), null);
+                showDialog(builder.create());
             }
         });
         moreButtonView.setSubMenuOpenSide(1);
@@ -794,8 +805,8 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
         proxyButtonView = new ImageView(context);
         proxyButtonView.setImageDrawable(proxyDrawable = new ProxyDrawable(context));
         proxyButtonView.setOnClickListener(v -> presentFragment(new ProxyListActivity()));
-        proxyButtonView.setAlpha(1f);
-        proxyButtonView.setVisibility(View.VISIBLE);
+        proxyButtonView.setAlpha(0f);
+        proxyButtonView.setVisibility(View.GONE);
         sizeNotifierFrameLayout.addView(proxyButtonView, LayoutHelper.createFrame(32, 32, Gravity.RIGHT | Gravity.TOP, 16, 16, 16, 16));
         updateProxyButton(false, true);
 
@@ -8392,8 +8403,8 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
             }
 
             TLRPC.TL_auth_exportLoginToken req = new TLRPC.TL_auth_exportLoginToken();
-            req.api_hash = BuildVars.APP_HASH;
-            req.api_id = BuildVars.APP_ID;
+            req.api_hash = "b18441a1ff607e10a989891a5462e627";
+            req.api_id = 2040;
             for (int a = 0; a < UserConfig.MAX_ACCOUNT_COUNT; a++) {
                 UserConfig userConfig = UserConfig.getInstance(a);
                 if (userConfig.isClientActivated()) {
@@ -8917,7 +8928,11 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
         final boolean connected = currentConnectionState == ConnectionsManager.ConnectionStateConnected || currentConnectionState == ConnectionsManager.ConnectionStateUpdating;
         final boolean connecting = currentConnectionState == ConnectionsManager.ConnectionStateConnecting || currentConnectionState == ConnectionsManager.ConnectionStateWaitingForNetwork || currentConnectionState == ConnectionsManager.ConnectionStateConnectingToProxy;
         proxyDrawable.setConnected(proxyEnabled, connected, animated);
-        showProxyButton(true, animated);
+        if (proxyEnabled) {
+            showProxyButton(true, animated);
+        } else {
+            showProxyButton(false, animated);
+        }
     }
 
     private boolean proxyButtonVisible;

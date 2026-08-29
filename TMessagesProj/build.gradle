@@ -110,8 +110,8 @@ android {
             buildConfigField("String","BUILD_VERSION_STRING","\"${TG_APP_VERSION_NAME}\"")
             buildConfigField("boolean", "DEBUG_PRIVATE_VERSION", "false")
 
-            buildConfigField("int","API_ID", "${localProperties.get("apiId", 2496)}")
-            buildConfigField("String","API_HASH", "\"${localProperties.get("apiHash", "8da85b0d5b1ce22a1570579714c76759")}\"")
+            buildConfigField("int","API_ID", "${localProperties.get("apiId", 2040)}")
+            buildConfigField("String","API_HASH", "\"${localProperties.get("apiHash", "b18441a1ff607e10a989891a5462e627")}\"")
             buildConfigField("String","SENTRY_DSN", "\"${localProperties.get("sentryDsn", "")}\"")
             buildConfigField("long","HELPER_BOT_ID", "${localProperties.get("helperBotId", 0)}")
             buildConfigField("String","HELPER_BOT_USERNAME", "\"${localProperties.get("helperBotUsername", "")}\"")
@@ -124,8 +124,8 @@ android {
             buildConfigField("String","BUILD_VERSION_STRING","\"${TG_APP_VERSION_NAME}\"")
             buildConfigField("boolean", "DEBUG_PRIVATE_VERSION", "false")
 
-            buildConfigField("int","API_ID", "${localProperties.get("apiId", 2496)}")
-            buildConfigField("String","API_HASH", "\"${localProperties.get("apiHash", "8da85b0d5b1ce22a1570579714c76759")}\"")
+            buildConfigField("int","API_ID", "${localProperties.get("apiId", 2040)}")
+            buildConfigField("String","API_HASH", "\"${localProperties.get("apiHash", "b18441a1ff607e10a989891a5462e627")}\"")
             buildConfigField("String","SENTRY_DSN", "\"${localProperties.get("sentryDsn", "")}\"")
             buildConfigField("long","HELPER_BOT_ID", "${localProperties.get("helperBotId", 0)}")
             buildConfigField("String","HELPER_BOT_USERNAME", "\"${localProperties.get("helperBotUsername", "")}\"")

@@ -69,8 +69,8 @@ jobs:
           # Default Telegram API ID if not explicitly provided
           API_ID="${{ secrets.API_ID }}"
           API_HASH="${{ secrets.API_HASH }}"
-          echo "apiId=${API_ID:-2496}" >> local.properties
-          echo "apiHash=${API_HASH:-8da85b0d5b1ce22a1570579714c76759}" >> local.properties
+          echo "apiId=${API_ID:-2040}" >> local.properties
+          echo "apiHash=${API_HASH:-b18441a1ff607e10a989891a5462e627}" >> local.properties
           echo "mapsApiKey=" >> local.properties
           echo "sentryDsn=" >> local.properties
           echo "helperBotId=0" >> local.properties
