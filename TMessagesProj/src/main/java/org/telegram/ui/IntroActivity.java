@@ -542,7 +542,6 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
 
         LocaleController.LocaleInfo englishInfo = null;
         LocaleController.LocaleInfo systemInfo = null;
-        LocaleController.LocaleInfo currentLocaleInfo = LocaleController.getInstance().getCurrentLocaleInfo();
         String systemLang = MessagesController.getInstance(currentAccount).suggestedLangCode;
         if (systemLang == null || systemLang.equals("en") && LocaleController.getInstance().getSystemDefaultLocale().getLanguage() != null && !LocaleController.getInstance().getSystemDefaultLocale().getLanguage().equals("en")) {
             systemLang = LocaleController.getInstance().getSystemDefaultLocale().getLanguage();
