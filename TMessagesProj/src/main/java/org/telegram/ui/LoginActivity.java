@@ -5476,6 +5476,7 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
             }
 
             if (currentPassword == null) {
+                CatFoodLog.w("2FA: currentPassword 为空");
                 return;
             }
 
@@ -5486,70 +5487,93 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
             }
             nextPressed = true;
             needShowProgress(0);
+            CatFoodLog.i("2FA: 正在准备提交两步验证密码...");
 
             Utilities.globalQueue.postRunnable(() -> {
-                final byte[] x_bytes;
+                try {
+                    final byte[] x_bytes;
 
-                TLRPC.PasswordKdfAlgo current_algo = currentPassword.current_algo;
-                if (current_algo instanceof TLRPC.TL_passwordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow) {
-                    byte[] passwordBytes = AndroidUtilities.getStringBytes(oldPassword);
-                    TLRPC.TL_passwordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow algo = (TLRPC.TL_passwordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow) current_algo;
-                    x_bytes = SRPHelper.getX(passwordBytes, algo);
-                } else {
-                    x_bytes = null;
-                }
-
-
-                RequestDelegate requestDelegate = (response, error) -> AndroidUtilities.runOnUIThread(() -> {
-                    nextPressed = false;
-                    if (error != null && "SRP_ID_INVALID".equals(error.text)) {
-                        TL_account.getPassword getPasswordReq = new TL_account.getPassword();
-                        ConnectionsManager.getInstance(currentAccount).sendRequest(getPasswordReq, (response2, error2) -> AndroidUtilities.runOnUIThread(() -> {
-                            if (error2 == null) {
-                                currentPassword = (TL_account.Password) response2;
-                                onNextPressed(null);
-                            }
-                        }), ConnectionsManager.RequestFlagWithoutLogin);
-                        return;
-                    }
-
-                    if (response instanceof TLRPC.TL_auth_authorization) {
-                        showDoneButton(false, true);
-                        postDelayed(() -> {
-                            needHideProgress(false, false);
-                            AndroidUtilities.hideKeyboard(codeField);
-                            onAuthSuccess((TLRPC.TL_auth_authorization) response);
-                        }, 150);
+                    TLRPC.PasswordKdfAlgo current_algo = currentPassword.current_algo;
+                    if (current_algo instanceof TLRPC.TL_passwordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow) {
+                        byte[] passwordBytes = AndroidUtilities.getStringBytes(oldPassword);
+                        TLRPC.TL_passwordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow algo = (TLRPC.TL_passwordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow) current_algo;
+                        CatFoodLog.i("2FA: 正在计算 SRP 哈希 (PBKDF2 100,000次迭代)...");
+                        x_bytes = SRPHelper.getX(passwordBytes, algo);
                     } else {
-                        needHideProgress(false);
-                        if (error.text.equals("PASSWORD_HASH_INVALID")) {
-                            onPasscodeError(true);
-                        } else if (error.text.startsWith("FLOOD_WAIT")) {
-                            int time = Utilities.parseInt(error.text);
-                            String timeString;
-                            if (time < 60) {
-                                timeString = LocaleController.formatPluralString("Seconds", time);
-                            } else {
-                                timeString = LocaleController.formatPluralString("Minutes", time / 60);
-                            }
-                            needShowAlert(getString(R.string.RestorePasswordNoEmailTitle), LocaleController.formatString("FloodWaitTime", R.string.FloodWaitTime, timeString));
-                        } else {
-                            needShowAlert(getString(R.string.RestorePasswordNoEmailTitle), error.text);
-                        }
+                        CatFoodLog.w("2FA: 不支持的 KDF 算法: " + (current_algo != null ? current_algo.getClass().getSimpleName() : "null"));
+                        x_bytes = null;
                     }
-                });
 
-                if (current_algo instanceof TLRPC.TL_passwordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow) {
-                    TLRPC.TL_inputCheckPasswordSRP password = SRPHelper.startCheck(x_bytes, currentPassword.srp_id, currentPassword.srp_B, (TLRPC.TL_passwordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow) current_algo);
-                    if (password == null) {
-                        TLRPC.TL_error error = new TLRPC.TL_error();
-                        error.text = "PASSWORD_HASH_INVALID";
-                        requestDelegate.run(null, error);
-                        return;
+                    RequestDelegate requestDelegate = (response, error) -> AndroidUtilities.runOnUIThread(() -> {
+                        nextPressed = false;
+                        if (error != null) {
+                            CatFoodLog.w("2FA 验证响应错误: " + error.text + " (code=" + error.code + ")");
+                        } else {
+                            CatFoodLog.i("2FA 验证成功！");
+                        }
+                        if (error != null && "SRP_ID_INVALID".equals(error.text)) {
+                            TL_account.getPassword getPasswordReq = new TL_account.getPassword();
+                            ConnectionsManager.getInstance(currentAccount).sendRequest(getPasswordReq, (response2, error2) -> AndroidUtilities.runOnUIThread(() -> {
+                                if (error2 == null) {
+                                    currentPassword = (TL_account.Password) response2;
+                                    onNextPressed(null);
+                                }
+                            }), ConnectionsManager.RequestFlagWithoutLogin);
+                            return;
+                        }
+
+                        if (response instanceof TLRPC.TL_auth_authorization) {
+                            showDoneButton(false, true);
+                            postDelayed(() -> {
+                                needHideProgress(false, false);
+                                AndroidUtilities.hideKeyboard(codeField);
+                                onAuthSuccess((TLRPC.TL_auth_authorization) response);
+                            }, 150);
+                        } else {
+                            needHideProgress(false);
+                            if (error != null && "PASSWORD_HASH_INVALID".equals(error.text)) {
+                                onPasscodeError(true);
+                            } else if (error != null && error.text != null && error.text.startsWith("FLOOD_WAIT")) {
+                                int time = Utilities.parseInt(error.text);
+                                String timeString;
+                                if (time < 60) {
+                                    timeString = LocaleController.formatPluralString("Seconds", time);
+                                } else {
+                                    timeString = LocaleController.formatPluralString("Minutes", time / 60);
+                                }
+                                needShowAlert(getString(R.string.RestorePasswordNoEmailTitle), LocaleController.formatString("FloodWaitTime", R.string.FloodWaitTime, timeString));
+                            } else {
+                                needShowAlert(getString(R.string.RestorePasswordNoEmailTitle), error != null ? error.text : "Unknown error");
+                            }
+                        }
+                    });
+
+                    if (current_algo instanceof TLRPC.TL_passwordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow) {
+                        TLRPC.TL_inputCheckPasswordSRP password = SRPHelper.startCheck(x_bytes, currentPassword.srp_id, currentPassword.srp_B, (TLRPC.TL_passwordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow) current_algo);
+                        if (password == null) {
+                            CatFoodLog.w("2FA: SRPHelper.startCheck 返回 null");
+                            TLRPC.TL_error error = new TLRPC.TL_error();
+                            error.text = "PASSWORD_HASH_INVALID";
+                            requestDelegate.run(null, error);
+                            return;
+                        }
+                        final TLRPC.TL_auth_checkPassword req = new TLRPC.TL_auth_checkPassword();
+                        req.password = password;
+                        CatFoodLog.i("2FA: 正在向 Telegram 发送 auth.checkPassword 请求...");
+                        ConnectionsManager.getInstance(currentAccount).sendRequest(req, requestDelegate, ConnectionsManager.RequestFlagFailOnServerErrors | ConnectionsManager.RequestFlagWithoutLogin);
+                    } else {
+                        CatFoodLog.w("2FA: 当前 algo 无法构造 SRP 请求");
+                        AndroidUtilities.runOnUIThread(() -> {
+                            nextPressed = false;
+                            needHideProgress(false);
+                        });
                     }
-                    final TLRPC.TL_auth_checkPassword req = new TLRPC.TL_auth_checkPassword();
-                    req.password = password;
-                    ConnectionsManager.getInstance(currentAccount).sendRequest(req, requestDelegate, ConnectionsManager.RequestFlagFailOnServerErrors | ConnectionsManager.RequestFlagWithoutLogin);
+                } catch (Throwable t) {
+                    CatFoodLog.e("2FA 计算或发送请求异常", t);
+                    AndroidUtilities.runOnUIThread(() -> {
+                        nextPressed = false;
+                        needHideProgress(false);
+                    });
                 }
             });
         }
