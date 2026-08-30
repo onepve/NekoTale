@@ -314,7 +314,11 @@ public class CatFoodHelper {
     }
 
     public static void showNodeSelectionDialog(Context context) {
-        ArrayList<SharedConfig.ProxyInfo> list = SharedConfig.proxyList;
+        String savedRaw = MessagesController.getGlobalMainSettings().getString("cat_food_raw", "");
+        ArrayList<SharedConfig.ProxyInfo> list = parseProxies(savedRaw);
+        if (list == null || list.isEmpty()) {
+            list = SharedConfig.proxyList;
+        }
         if (list == null || list.isEmpty()) {
             Toast.makeText(context, LocaleController.getString(R.string.NoProxyFound), Toast.LENGTH_SHORT).show();
             return;
@@ -333,7 +337,7 @@ public class CatFoodHelper {
         for (int i = 0; i < list.size(); i++) {
             SharedConfig.ProxyInfo info = list.get(i);
             String name = !TextUtils.isEmpty(info.username) ? info.username : (info.address + ":" + info.port);
-            boolean isCurrent = SharedConfig.currentProxy == info || (SharedConfig.currentProxy != null && TextUtils.equals(SharedConfig.currentProxy.address, info.address) && SharedConfig.currentProxy.port == info.port);
+            boolean isCurrent = SharedConfig.currentProxy != null && (SharedConfig.currentProxy.username != null && SharedConfig.currentProxy.username.contains(name) || TextUtils.equals(SharedConfig.currentProxy.address, info.address));
             items[i] = (isCurrent ? "✓ " : "  ") + name;
         }
 
@@ -407,6 +411,13 @@ public class CatFoodHelper {
         return list;
     }
 
+    private static boolean isValidServer(String server) {
+        if (TextUtils.isEmpty(server)) return false;
+        if (server.startsWith("-") || server.contains(",") || server.contains(" ") || server.contains("/") || server.length() < 3) return false;
+        if (server.contains("IP-CIDR") || server.contains("DOMAIN") || server.contains("GEOIP") || server.contains("MATCH") || server.contains("DIRECT") || server.contains("REJECT")) return false;
+        return true;
+    }
+
     private static ArrayList<SharedConfig.ProxyInfo> parseClashYaml(String yaml) {
         ArrayList<SharedConfig.ProxyInfo> list = new ArrayList<>();
         try {
@@ -417,10 +428,28 @@ public class CatFoodHelper {
             String curPassword = "";
             String curSecret = "";
             String curType = "";
+            boolean inProxiesSection = false;
 
             for (String line : lines) {
                 String stripped = line.trim();
-                if (stripped.startsWith("#")) continue;
+                if (stripped.startsWith("#") || stripped.isEmpty()) continue;
+
+                if (line.startsWith("proxies:")) {
+                    inProxiesSection = true;
+                    continue;
+                } else if (inProxiesSection && !line.startsWith(" ") && !line.startsWith("\t") && !line.startsWith("-")) {
+                    break;
+                }
+
+                if (!inProxiesSection && !yaml.contains("proxies:")) {
+                    inProxiesSection = true;
+                }
+
+                if (!inProxiesSection) continue;
+
+                if (stripped.contains("IP-CIDR") || stripped.contains("DOMAIN") || stripped.contains("GEOIP") || stripped.contains("MATCH") || stripped.contains("DIRECT") || stripped.contains("REJECT")) {
+                    continue;
+                }
 
                 // Handle inline dict: - { name: "HK", server: "1.1.1.1", port: 443, ... }
                 if (stripped.startsWith("-") && stripped.contains("{") && stripped.contains("}")) {
@@ -441,7 +470,7 @@ public class CatFoodHelper {
                             else if ("type".equalsIgnoreCase(k)) inType = v;
                         }
                     }
-                    if (!TextUtils.isEmpty(inServer) && inPort > 0) {
+                    if (isValidServer(inServer) && inPort > 0) {
                         String displayName = !TextUtils.isEmpty(inName) ? inName : (inServer + ":" + inPort);
                         list.add(new SharedConfig.ProxyInfo(inServer, inPort, displayName, inPw, inSecret));
                     }
@@ -449,7 +478,7 @@ public class CatFoodHelper {
                 }
 
                 if (stripped.startsWith("-")) {
-                    if (!TextUtils.isEmpty(curServer) && curPort > 0) {
+                    if (isValidServer(curServer) && curPort > 0) {
                         String displayName = !TextUtils.isEmpty(curName) ? curName : (curServer + ":" + curPort);
                         list.add(new SharedConfig.ProxyInfo(curServer, curPort, displayName, curPassword, curSecret));
                     }
@@ -474,7 +503,7 @@ public class CatFoodHelper {
                 }
             }
 
-            if (!TextUtils.isEmpty(curServer) && curPort > 0) {
+            if (isValidServer(curServer) && curPort > 0) {
                 String displayName = !TextUtils.isEmpty(curName) ? curName : (curServer + ":" + curPort);
                 list.add(new SharedConfig.ProxyInfo(curServer, curPort, displayName, curPassword, curSecret));
             }
@@ -631,12 +660,11 @@ public class CatFoodHelper {
         String nodeName = !TextUtils.isEmpty(current.username) ? current.username : (current.address + ":" + current.port);
         CatFoodLog.i(String.format("正在应用节点: [%s] -> %s:%d, secret=%s", nodeName, current.address, current.port, (TextUtils.isEmpty(current.secret) ? "无" : "有")));
 
-        for (SharedConfig.ProxyInfo item : allList) {
-            SharedConfig.addProxy(item);
-        }
-
         // 如果是 MTProto (有 secret)，走 Telegram 原生协议直连
         if (!TextUtils.isEmpty(current.secret)) {
+            if (SharedConfig.proxyList != null) {
+                SharedConfig.proxyList.clear();
+            }
             SharedConfig.currentProxy = SharedConfig.addProxy(current);
             SharedPreferences.Editor editor = MessagesController.getGlobalMainSettings().edit();
             editor.putBoolean("proxy_enabled", true);

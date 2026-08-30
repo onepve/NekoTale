@@ -161,6 +161,10 @@ public class CatFoodCoreManager {
         editor.remove("proxy_pass");
         editor.commit();
 
+        // 彻底清空并重置 SharedConfig.proxyList，只保留当前唯一的本地直连代理
+        if (SharedConfig.proxyList != null) {
+            SharedConfig.proxyList.clear();
+        }
         SharedConfig.ProxyInfo localProxy = new SharedConfig.ProxyInfo(host, port, "⚡ 猫猫直连 (" + (TextUtils.isEmpty(nodeName) ? "默认节点" : nodeName) + ")", "", "");
         SharedConfig.currentProxy = SharedConfig.addProxy(localProxy);
         SharedConfig.saveProxyList();
