@@ -176,13 +176,6 @@ jobs:
               --data '{"files":["https://dl.onepve.com/NekoTale/latest/NekoTale.apk","https://dl.onepve.com/NekoTale/latest/version.json"]}'
           fi
 
-      - name: Upload Temporary GitHub Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: NekoTale-release
-          path: dist/
-          retention-days: 1
-
       - name: Auto Clean Old Caches, Artifacts, and Runs
         if: always()
         env:
