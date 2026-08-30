@@ -97,7 +97,8 @@
         android:hasFragileUserData="true"
         android:preserveLegacyExternalStorage="true"
         android:allowAudioPlaybackCapture="true"
-        tools:replace="android:supportsRtl"
+        android:extractNativeLibs="true"
+        tools:replace="android:supportsRtl,android:extractNativeLibs"
         android:usesCleartextTraffic="true"
         android:enableOnBackInvokedCallback="true"
     >

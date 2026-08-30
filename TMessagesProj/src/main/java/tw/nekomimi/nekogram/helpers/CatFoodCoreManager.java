@@ -171,12 +171,14 @@ public class CatFoodCoreManager {
 
     private static File getExecutableBinary(Context context) {
         try {
-            // 1. 优先使用系统原生 lib 路径 (自带执行权限)
+            // 1. 优先使用系统原生 lib 路径 (自带执行权限，SELinux 允许执行)
             String nativeLibDir = context.getApplicationInfo().nativeLibraryDir;
+            CatFoodLog.i("检查原生库目录: " + nativeLibDir);
             if (!TextUtils.isEmpty(nativeLibDir)) {
                 File nativeFile = new File(nativeLibDir, "libnekocore.so");
-                if (nativeFile.exists() && nativeFile.canExecute()) {
-                    CatFoodLog.i("加载原生库路径内核: " + nativeFile.getAbsolutePath());
+                CatFoodLog.i("原生内核路径: " + nativeFile.getAbsolutePath() + ", exists=" + nativeFile.exists() + ", canExec=" + nativeFile.canExecute());
+                if (nativeFile.exists()) {
+                    nativeFile.setExecutable(true, false);
                     return nativeFile;
                 }
             }
@@ -185,6 +187,7 @@ public class CatFoodCoreManager {
             File target = new File(context.getFilesDir(), "libnekocore.so");
             if (!target.exists() || target.length() < 1000) {
                 String sourceDir = context.getApplicationInfo().sourceDir;
+                CatFoodLog.i("从 APK 解压内核: " + sourceDir);
                 try (ZipFile zip = new ZipFile(sourceDir)) {
                     ZipEntry entry = zip.getEntry("lib/arm64-v8a/libnekocore.so");
                     if (entry == null) {
@@ -204,6 +207,7 @@ public class CatFoodCoreManager {
             }
             if (target.exists()) {
                 target.setExecutable(true, false);
+                CatFoodLog.i("备用内核路径: " + target.getAbsolutePath() + ", exists=" + target.exists() + ", canExec=" + target.canExecute());
                 return target;
             }
         } catch (Exception e) {
