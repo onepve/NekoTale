@@ -80,7 +80,7 @@
     <string name="AutoPauseVideo">自動暫停影片</string>
     <string name="AutoPauseVideoAbout">當鎖定螢幕/切換到背景時</string>
     <string name="DisableProximityEvents">禁用接近事件</string>
-    <string name="Page1Message2">Nekogram 是使用 Telegram API\n的**非官方**應用</string>
+    <string name="Page1Message2">極速、純淨、安全的專屬即時通訊應用。</string>
     <string name="MapDriftingFix">中國大陸地圖漂移修復</string>
     <string name="VoiceEnhancements">語音增強功能</string>
     <string name="VoiceEnhancementsAbout">雜訊抑制和語音歸一化</string>
@@ -265,10 +265,10 @@
     <string name="ViewAsJson"></string>
     <string name="HideStories">隱藏動態</string>
     <string name="QuickForward">使用快速轉發選單</string>
-    <string name="DidNotGetTheCodeBlameDurov">如果您沒有在其他裝置上取得驗證碼，或者您沒有在其他裝置上登入 Telegram，請使用官方 Telegram 應用程式接收驗證碼。\n\nTelegram 已**停用透過簡訊登入的功能** 在第三方應用程序上。 登入第三方應用程式的使用者只能透過 Telegram 接收登入代碼。\n\n我們無法協助您解決此問題，如果您在登入時遇到任何問題，請聯絡 Telegram 支援。</string>
-    <string name="ChangePhoneNumberBlameDurov">Telegram **已禁止在第三方應用更改電話號碼**。用戶只能透過 Telegram 更改電話號碼。</string>
-    <string name="CreatePasskeyBlameDurov">Telegram 的通行密鑰功能目前僅在官方客戶端中提供。第三方客戶端暫不支持創建或使用此功能。</string>
-    <string name="OpenOfficialApp">打開官方客戶端</string>
+    <string name="DidNotGetTheCodeBlameDurov">如果你沒有在另一台設備上收到驗證碼，或者你沒有在其他設備上登入，請在已登入的設備上接收驗證碼。\n\n系統**已禁用在未授權設備使用簡訊登入**。登入用戶只能透過已有設備接收驗證码。</string>
+    <string name="ChangePhoneNumberBlameDurov">暫不支援在目前設備更改電話號碼。</string>
+    <string name="CreatePasskeyBlameDurov">暫不支援在此建立通行密鑰。</string>
+    <string name="OpenOfficialApp">返回</string>
     <string name="NavigationAnimation">導航動畫</string>
     <string name="NavigationAnimationBezier">經典</string>
     <string name="NavigationAnimationSpring">自然</string>

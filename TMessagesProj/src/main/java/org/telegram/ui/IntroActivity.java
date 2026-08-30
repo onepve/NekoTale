@@ -149,7 +149,7 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
                 LocaleController.getString(R.string.Page6Title)
         };
         messages = new String[]{
-                LocaleController.getString(R.string.Page1Message2),
+                LocaleController.getString(R.string.Page1Message),
                 LocaleController.getString(R.string.Page2Message),
                 LocaleController.getString(R.string.Page3Message),
                 LocaleController.getString(R.string.Page5Message),
@@ -183,22 +183,7 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
         proxyIconView.setImageDrawable(introProxyDrawable);
         proxyFrameLayout.addView(proxyIconView, LayoutHelper.createFrame(28, 28, Gravity.CENTER));
         proxyFrameLayout.setContentDescription(LocaleController.getString(R.string.ProxySettings));
-        proxyFrameLayout.setOnClickListener(v -> {
-            ItemOptions.makeOptions(IntroActivity.this, proxyFrameLayout)
-                    .add(R.drawable.outline_shield_plain_24, LocaleController.getString(R.string.ProxySettings), () -> presentFragment(new ProxyListActivity()))
-                    .add(R.drawable.menu_website, "登录网站与节点", () -> {
-                        if (getParentActivity() == null) return;
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
-                        builder.setTitle("猫猫网络与节点");
-                        builder.setMessage("正在接入云工作台（yunbox.cc）与自建 Sing-box 加密隧道直连 TG DC1~DC5。后续在此直接登录面板账号并下发专属节点。");
-                        builder.setPositiveButton("访问控制台", (d, w) -> {
-                            Browser.openUrl(getParentActivity(), "https://yunbox.cc");
-                        });
-                        builder.setNegativeButton(LocaleController.getString(R.string.Close), null);
-                        showDialog(builder.create());
-                    })
-                    .show();
-        });
+        proxyFrameLayout.setOnClickListener(v -> presentFragment(new ProxyListActivity()));
 
         int themeMargin = 4;
         frameContainerView = new FrameLayout(context) {

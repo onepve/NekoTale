@@ -28,21 +28,21 @@
     <string name="WrongNumberFormat">格式错误</string>
     <string name="ShortNumberInfo">你提供的号码对于 **%1$s** 来说过短：\n\n**%2$s**\n\n请输入正确的号码，包括你的国家代码。</string>
     <string name="EditNumber">编辑手机号码</string>
-    <string name="DidNotGetTheCodeInfo">如果你没有通过短信或电话收到验证码，请检查你的**蜂窝数据设置**和手机号码：\n\n**%1$s**\n\n另外，你可尝试使用另一个号码或联系 Telegram 客服。 点击 **帮助** 将技术细节发送给我们，以便我们识别问题。</string>
+    <string name="DidNotGetTheCodeInfo">如果你没有通过短信或电话收到验证码，请检查你的**蜂窝数据设置**和手机号码：\n\n**%1$s**\n\n另外，你可尝试使用另一个号码。 点击 **帮助** 将技术细节发送给我们，以便我们识别问题。</string>
     <string name="DidNotGetTheCodeHelpButton">帮助</string>
     <string name="DidNotGetTheCodeEditNumberButton">编辑手机号码</string>
     <!--code enter view-->
     <string name="YourCode">手机验证</string>
     <string name="SentSmsCode">我们已经向你的手机号码（**%1$s**）发送了一条带有激活验证码的短信。</string>
-    <string name="SentAppCode">我们已向你其它设备上的 **Telegram** 应用发送了一条验证码消息。</string>
-    <string name="SentAppCodeWithPhone">我们已经将验证码发送到该帐号（%1$s）其他设备上的 **Telegram应用**。</string>
-    <string name="SentAppCodeTitle">查看你的 Telegram 消息</string>
+    <string name="SentAppCode">我们已向你其它设备上的已登录客户端发送了一条验证码消息。</string>
+    <string name="SentAppCodeWithPhone">我们已经将验证码发送到该帐号（%1$s）其他设备上的已登录客户端。</string>
+    <string name="SentAppCodeTitle">查看你的应用消息</string>
     <string name="SentFragmentCode">在 Fragment 的号码板块获取 %1$s 的验证码。</string>
     <string name="SentSmsCodeTitle">输入验证码</string>
     <string name="OpenFragment">打开 Fragment</string>
-    <string name="SentCallCode">我们正在呼叫你的手机（**%1$s**）。\n\n请不要接听，Telegram 将会自动处理接下来的事情。</string>
+    <string name="SentCallCode">我们正在呼叫你的手机（**%1$s**）。\n\n请不要接听，系统将会自动处理接下来的事情。</string>
     <string name="SentCallOnly">我们正在呼叫你的手机（**%1$s**）以播放验证码。</string>
-    <string name="CallText">Telegram 会在 %1$d:%2$02d 后使用电话呼叫你播放验证码</string>
+    <string name="CallText">系统会在 %1$d:%2$02d 后使用电话呼叫你播放验证码</string>
     <string name="SmsText">我们会在 %1$d:%2$02d 后给你发送短信</string>
     <string name="Calling">正在呼叫你…</string>
     <string name="SendingSms">正在发送短信...</string>
@@ -61,7 +61,7 @@
     <string name="CancelLinkExpired">链接无效或已过期。</string>
     <string name="CancelLinkSuccessTitle">成功！</string>
     <string name="CancelLinkSuccess">删除帐号（%1$s）的请求已被取消。你现在可以关闭此窗口。</string>
-    <string name="OtherLoginCode">你的登录验证码是**%1$s**。在你尝试登录 Telegram 应用程序时输入它。 \n\n不要将此验证码透露给任何人。</string>
+    <string name="OtherLoginCode">你的登录验证码是**%1$s**。在你尝试登录应用程序时输入它。 \n\n不要将此验证码透露给任何人。</string>
     <string name="SmsAvailableIn">你可以在 %1$d:%2$02d 请求发送短信</string>
     <string name="ResendSmsAvailableIn">你可以在 %1$d：%2$02d 请求新短信</string>
     <string name="RequestSmsButton">通过短信获取验证码</string>
@@ -4199,18 +4199,18 @@
     <string name="ViewMessageStatistic">消息数据分析</string>
     <string name="ViewMessage">打开消息</string>
     <!--Intro view-->
-    <string name="Page1Title">Telegram</string>
-    <string name="Page2Title">快速</string>
+    <string name="Page1Title">猫猫物语</string>
+    <string name="Page2Title">极速</string>
     <string name="Page3Title">免费</string>
     <string name="Page4Title">安全</string>
     <string name="Page5Title">强大</string>
     <string name="Page6Title">基于云端</string>
-    <string name="Page1Message">世界上**最快的**聊天工具\n**免费**又**安全**。</string>
-    <string name="Page2Message">**Telegram** 收发信息\n比任何应用都快。</string>
-    <string name="Page3Message">**Telegram** 提供免费无限量的聊天与媒体云端存储。</string>
-    <string name="Page4Message">**Telegram** 保障你的消息安全\n免受黑客攻击。</string>
-    <string name="Page5Message">**Telegram** 不论消息或是媒体文件\n都无大小限制</string>
-    <string name="Page6Message">**Telegram** 让你能从\n多个设备收发消息。</string>
+    <string name="Page1Message">极速、纯净、安全的专属即时通讯应用。</string>
+    <string name="Page2Message">**猫猫物语** 能够极速传递每一条消息。</string>
+    <string name="Page3Message">**猫猫物语** 永久免费，零广告插播。</string>
+    <string name="Page4Message">**猫猫物语** 保护你的消息与隐私安全。</string>
+    <string name="Page5Message">**猫猫物语** 对媒体和聊天的大小不设限制。</string>
+    <string name="Page6Message">**猫猫物语** 允许你在多台设备上随时访问消息。</string>
     <string name="StartMessaging">开始使用</string>
     <!-- VoIP -->
     <string name="AccountSettings">账号设置</string>

@@ -762,22 +762,11 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
         moreButtonView.setIcon(R.drawable.ic_ab_other);
         moreButtonView.addSubItem(0, R.drawable.outline_shield_plain_24, getString(R.string.ProxySettings));
         moreButtonView.addSubItem(1, R.drawable.msg_qrcode, getString(R.string.QRLoginTitle));
-        moreButtonView.addSubItem(2, R.drawable.menu_website, "登录网站与节点");
         moreButtonView.setDelegate(id -> {
             if (id == 0) {
                 presentFragment(new ProxyListActivity());
             } else if (id == 1) {
                 setPage(VIEW_QR_LOGIN, true, null, false);
-            } else if (id == 2) {
-                if (getParentActivity() == null) return;
-                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
-                builder.setTitle("猫猫网络与节点");
-                builder.setMessage("正在接入云工作台（yunbox.cc）与自建 Sing-box 加密隧道直连 TG DC1~DC5。后续在此直接登录面板账号并下发专属节点。");
-                builder.setPositiveButton("访问控制台", (d, w) -> {
-                    org.telegram.messenger.browser.Browser.openUrl(getParentActivity(), "https://yunbox.cc");
-                });
-                builder.setNegativeButton(LocaleController.getString(R.string.Close), null);
-                showDialog(builder.create());
             }
         });
         moreButtonView.setSubMenuOpenSide(1);
