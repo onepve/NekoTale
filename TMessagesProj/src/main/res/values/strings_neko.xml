@@ -342,5 +342,6 @@
     <string name="FeedCatFoodFailed">Failed to parse configuration, please check the link.</string>
     <string name="FeedCatFoodLoading">Connecting...</string>
     <string name="FeedCatFoodPaste">Paste</string>
+    <string name="FeedCatFoodScan">Scan QR</string>
     <string name="FeedCatFoodEmpty">Please enter or paste a link first</string>
 </resources>

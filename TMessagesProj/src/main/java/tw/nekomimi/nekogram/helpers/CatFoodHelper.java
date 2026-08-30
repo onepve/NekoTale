@@ -2,19 +2,23 @@ package tw.nekomimi.nekogram.helpers;
 
 import static org.telegram.messenger.AndroidUtilities.dp;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +36,7 @@ import org.telegram.tgnet.ConnectionsManager;
 import org.telegram.ui.ActionBar.AlertDialog;
 import org.telegram.ui.ActionBar.BaseFragment;
 import org.telegram.ui.ActionBar.Theme;
+import org.telegram.ui.CameraScanActivity;
 import org.telegram.ui.Components.EditTextBoldCursor;
 import org.telegram.ui.Components.LayoutHelper;
 
@@ -84,7 +89,7 @@ public class CatFoodHelper {
         fieldBackground.setColor(Theme.multAlpha(Theme.getColor(Theme.key_dialogTextBlack, resourcesProvider), 0.06f));
         editText.setBackground(fieldBackground);
 
-        // Auto paste from clipboard if available
+        // Auto paste from clipboard if available on dialog opening
         try {
             ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
             if (clipboard != null && clipboard.hasPrimaryClip()) {
@@ -103,7 +108,63 @@ public class CatFoodHelper {
         } catch (Exception ignore) {}
 
         container.addView(editText, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 0, 0, 0, 0));
+
+        // Quick action buttons: [扫码] + [粘贴]
+        LinearLayout actionsLayout = new LinearLayout(context);
+        actionsLayout.setOrientation(LinearLayout.HORIZONTAL);
+        actionsLayout.setGravity(Gravity.CENTER_VERTICAL);
+
+        LinearLayout scanBtn = createActionButton(context, R.drawable.msg_qrcode, LocaleController.getString(R.string.FeedCatFoodScan), resourcesProvider);
+        LinearLayout pasteBtn = createActionButton(context, R.drawable.msg_copy, LocaleController.getString(R.string.FeedCatFoodPaste), resourcesProvider);
+
+        actionsLayout.addView(scanBtn, LayoutHelper.createLinear(0, LayoutHelper.WRAP_CONTENT, 1.0f, 0, 0, dp(8), 0));
+        actionsLayout.addView(pasteBtn, LayoutHelper.createLinear(0, LayoutHelper.WRAP_CONTENT, 1.0f, dp(8), 0, 0, 0));
+
+        container.addView(actionsLayout, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, 0, dp(12), 0, 0));
         builder.setView(container);
+
+        final AlertDialog[] dialogRef = new AlertDialog[1];
+
+        scanBtn.setOnClickListener(v -> {
+            if (dialogRef[0] != null) {
+                try {
+                    dialogRef[0].dismiss();
+                } catch (Exception ignore) {}
+            }
+            if (Build.VERSION.SDK_INT >= 23 && activity.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, 34);
+                return;
+            }
+            CameraScanActivity.showAsSheet(activity, true, CameraScanActivity.TYPE_QR, new CameraScanActivity.CameraScanActivityDelegate() {
+                @Override
+                public void didFindQr(String scanned) {
+                    if (!TextUtils.isEmpty(scanned)) {
+                        processFeed(activity, scanned);
+                    }
+                }
+            });
+        });
+
+        pasteBtn.setOnClickListener(v -> {
+            try {
+                ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                if (clipboard != null && clipboard.hasPrimaryClip()) {
+                    ClipData clip = clipboard.getPrimaryClip();
+                    if (clip != null && clip.getItemCount() > 0) {
+                        CharSequence clipText = clip.getItemAt(0).getText();
+                        if (clipText != null) {
+                            String s = clipText.toString().trim();
+                            if (!TextUtils.isEmpty(s)) {
+                                editText.setText(s);
+                                editText.setSelection(s.length());
+                                return;
+                            }
+                        }
+                    }
+                }
+            } catch (Exception ignore) {}
+            Toast.makeText(context, LocaleController.getString(R.string.FeedCatFoodEmpty), Toast.LENGTH_SHORT).show();
+        });
 
         builder.setPositiveButton(LocaleController.getString(R.string.FeedCatFoodConfirm), (dialogInterface, i) -> {
             String input = editText.getText().toString().trim();
@@ -116,11 +177,36 @@ public class CatFoodHelper {
 
         builder.setNegativeButton(LocaleController.getString(R.string.Cancel), null);
 
+        AlertDialog dialog = builder.create();
+        dialogRef[0] = dialog;
         if (fragment != null) {
-            fragment.showDialog(builder.create());
+            fragment.showDialog(dialog);
         } else {
-            builder.show();
+            dialog.show();
         }
+    }
+
+    private static LinearLayout createActionButton(Context context, int iconRes, String text, Theme.ResourcesProvider resourcesProvider) {
+        LinearLayout button = new LinearLayout(context);
+        button.setOrientation(LinearLayout.HORIZONTAL);
+        button.setGravity(Gravity.CENTER);
+        button.setPadding(dp(12), dp(8), dp(12), dp(8));
+
+        button.setBackground(Theme.createSimpleSelectorRoundRectDrawable(dp(8), Theme.multAlpha(Theme.getColor(Theme.key_dialogTextBlack, resourcesProvider), 0.08f), Theme.multAlpha(Theme.getColor(Theme.key_dialogTextBlack, resourcesProvider), 0.16f)));
+
+        ImageView icon = new ImageView(context);
+        icon.setImageResource(iconRes);
+        icon.setColorFilter(Theme.getColor(Theme.key_dialogTextBlack, resourcesProvider));
+        button.addView(icon, LayoutHelper.createLinear(20, 20, Gravity.CENTER_VERTICAL, 0, 0, dp(6), 0));
+
+        TextView tv = new TextView(context);
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+        tv.setTextColor(Theme.getColor(Theme.key_dialogTextBlack, resourcesProvider));
+        tv.setText(text);
+        tv.setTypeface(AndroidUtilities.getTypeface("fonts/rmedium.ttf"));
+        button.addView(tv, LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, Gravity.CENTER_VERTICAL));
+
+        return button;
     }
 
     public static void processFeed(Context context, String rawInput) {

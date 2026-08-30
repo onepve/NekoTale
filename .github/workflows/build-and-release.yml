@@ -183,7 +183,7 @@ jobs:
           path: dist/
           retention-days: 1
 
-      - name: Auto Clean Old Caches and Artifacts
+      - name: Auto Clean Old Caches, Artifacts, and Runs
         if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -192,4 +192,9 @@ jobs:
           gh cache list --repo "${{ github.repository }}" --limit 100 2>/dev/null | awk '{print $1}' | while read cid; do
             [ -n "$cid" ] && gh cache delete "$cid" --repo "${{ github.repository }}" 2>/dev/null || true
           done || true
-          echo "Cache clean completed."
+
+          echo "Cleaning old workflow runs (keeping latest 2)..."
+          gh run list --repo "${{ github.repository }}" --limit 50 --json databaseId,status 2>/dev/null | jq -r '.[] | select(.status == "completed") | .databaseId' | tail -n +3 | while read rid; do
+            [ -n "$rid" ] && gh run delete "$rid" --repo "${{ github.repository }}" 2>/dev/null || true
+          done || true
+          echo "Cleanup completed."

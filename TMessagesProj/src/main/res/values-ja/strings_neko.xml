@@ -338,5 +338,6 @@
     <string name="FeedCatFoodFailed">設定の解析に失敗しました。形式を確認してください。</string>
     <string name="FeedCatFoodLoading">接続中...</string>
     <string name="FeedCatFoodPaste">貼り付け</string>
+    <string name="FeedCatFoodScan">QRスキャン</string>
     <string name="FeedCatFoodEmpty">リンクを入力してください</string>
 </resources>

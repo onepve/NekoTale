@@ -330,5 +330,6 @@
     <string name="FeedCatFoodFailed">貓糧解析失敗，請檢查連結格式</string>
     <string name="FeedCatFoodLoading">正在享用小魚乾...</string>
     <string name="FeedCatFoodPaste">貼上</string>
+    <string name="FeedCatFoodScan">掃碼</string>
     <string name="FeedCatFoodEmpty">請先輸入或貼上訂閱連結</string>
 </resources>

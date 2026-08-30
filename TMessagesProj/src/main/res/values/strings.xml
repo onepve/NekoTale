@@ -11171,12 +11171,4 @@
     <string name="ArticleAIPrompt">Write a prompt...</string>
     <string name="ArticleAIGenerate">Generate</string>
     <string name="ArticleAIAddToPage">Add to Page</string>
-    <string name="FeedCatFood">Feed Cat Food</string>
-    <string name="FeedCatFoodHint">Please paste your configuration or subscription link:</string>
-    <string name="FeedCatFoodConfirm">Feed</string>
-    <string name="FeedCatFoodSuccess">Connected successfully! (๑•̀ㅂ•́)و✧</string>
-    <string name="FeedCatFoodFailed">Failed to parse configuration, please check the link.</string>
-    <string name="FeedCatFoodLoading">Connecting...</string>
-    <string name="FeedCatFoodPaste">Paste</string>
-    <string name="FeedCatFoodEmpty">Please enter or paste a link first</string>
 </resources>

@@ -14992,5 +14992,6 @@
   <string name="FeedCatFoodFailed">猫粮解析失败，请检查链接格式</string>
   <string name="FeedCatFoodLoading">正在享用小鱼干...</string>
   <string name="FeedCatFoodPaste">粘贴</string>
+  <string name="FeedCatFoodScan">扫码</string>
   <string name="FeedCatFoodEmpty">请先输入或粘贴订阅链接</string>
 </resources>
