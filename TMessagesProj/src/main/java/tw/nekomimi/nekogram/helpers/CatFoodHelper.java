@@ -660,12 +660,7 @@ public class CatFoodHelper {
         } else {
             // 其它协议 (HY2 / VLESS / Trojan / SS / Clash)，启动本地 Mihomo 内核进行全协议桥接
             String rawData = MessagesController.getGlobalMainSettings().getString("cat_food_raw", "");
-            boolean coreStarted = CatFoodCoreManager.startCoreWithNode(ApplicationLoader.applicationContext, rawData, current.username);
-            if (!coreStarted) {
-                CatFoodLog.w("Mihomo 内核启动未就绪，使用回退直连配置");
-                SharedConfig.currentProxy = SharedConfig.addProxy(current);
-                ConnectionsManager.setProxySettings(true, current.address, current.port, current.username, current.password, current.secret);
-            }
+            CatFoodCoreManager.startCoreWithNode(ApplicationLoader.applicationContext, rawData, current.username);
             NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
         }
     }

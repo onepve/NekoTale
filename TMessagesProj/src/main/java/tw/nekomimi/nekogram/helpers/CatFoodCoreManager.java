@@ -116,26 +116,23 @@ public class CatFoodCoreManager {
                 } catch (Exception ignore) {}
             });
 
-            // 等待本地 127.0.0.1:10808 就绪 (最多 3 秒)
-            boolean ready = false;
-            for (int i = 0; i < 30; i++) {
-                if (isPortOpen("127.0.0.1", LOCAL_PORT, 200)) {
-                    ready = true;
-                    break;
-                }
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ignore) {}
-            }
+            // 立即将 Telegram 代理指向本地回路 127.0.0.1:10808 (免主线程阻塞)
+            applyLocalProxyToTelegram("127.0.0.1", LOCAL_PORT, selectedNodeName);
 
-            if (ready) {
-                CatFoodLog.i("Mihomo 本地端口 127.0.0.1:" + LOCAL_PORT + " 监听就绪！");
-                applyLocalProxyToTelegram("127.0.0.1", LOCAL_PORT, selectedNodeName);
-                return true;
-            } else {
-                CatFoodLog.w("等待本地内核端口超时");
-                return false;
-            }
+            // 异步验证端口就绪
+            Utilities.globalQueue.postRunnable(() -> {
+                for (int i = 0; i < 20; i++) {
+                    if (isPortOpen("127.0.0.1", LOCAL_PORT, 200)) {
+                        CatFoodLog.i("Mihomo 本地端口 127.0.0.1:" + LOCAL_PORT + " 监听就绪！");
+                        return;
+                    }
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ignore) {}
+                }
+            });
+
+            return true;
 
         } catch (Exception e) {
             CatFoodLog.e("启动 Mihomo 进程异常", e);
