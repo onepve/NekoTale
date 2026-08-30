@@ -231,6 +231,7 @@ public class CatFoodHelper {
         }
 
         final String cleanInput = rawInput.trim();
+        CatFoodLog.i("开始喂猫粮, 输入内容长度=" + cleanInput.length() + ", 前缀=" + (cleanInput.length() > 30 ? cleanInput.substring(0, 30) + "..." : cleanInput));
 
         if (cleanInput.startsWith("http://") || cleanInput.startsWith("https://")) {
             MessagesController.getGlobalMainSettings().edit().putString("cat_food_url", cleanInput).apply();
@@ -248,29 +249,45 @@ public class CatFoodHelper {
 
             try {
                 if (cleanInput.startsWith("http://") || cleanInput.startsWith("https://")) {
+                    CatFoodLog.i("正在通过 OkHttp 请求远程订阅: " + cleanInput);
                     Request req = new Request.Builder()
                             .url(cleanInput)
                             .header("User-Agent", "ClashMeta/1.18.0 (NekoTale)")
                             .header("Accept", "*/*")
                             .build();
                     try (Response response = httpClient.newCall(req).execute()) {
+                        CatFoodLog.i("远程订阅响应状态码: " + response.code());
                         if (response.isSuccessful() && response.body() != null) {
                             fetchedData = response.body().string().trim();
+                            CatFoodLog.i("获取成功, 数据长度: " + fetchedData.length() + " 字符");
+                        } else {
+                            CatFoodLog.w("远程订阅响应异常: " + response.code() + " " + response.message());
                         }
                     }
                 }
             } catch (Exception e) {
+                CatFoodLog.e("请求远程订阅抛出异常", e);
                 FileLog.e(e);
             }
 
             ArrayList<SharedConfig.ProxyInfo> parsedList = parseProxies(fetchedData);
             if (parsedList.isEmpty() && !cleanInput.equals(fetchedData)) {
+                CatFoodLog.i("尝试直接解析原始输入字符串...");
                 parsedList = parseProxies(cleanInput);
+            }
+
+            CatFoodLog.i("解析节点总数: " + parsedList.size());
+            for (int i = 0; i < parsedList.size(); i++) {
+                SharedConfig.ProxyInfo p = parsedList.get(i);
+                CatFoodLog.i(String.format("  [%d] 名称: %s | 目标: %s:%d | secret=%s | user=%s", 
+                        i + 1, p.username, p.address, p.port, (TextUtils.isEmpty(p.secret) ? "无" : "有"), (TextUtils.isEmpty(p.username) ? "无" : p.username)));
             }
 
             if (!parsedList.isEmpty()) {
                 success = true;
                 applyProxy(parsedList.get(0), parsedList);
+            } else {
+                CatFoodLog.w("未能解析出任何有效代理节点");
             }
 
             final boolean finalSuccess = success;
@@ -605,8 +622,12 @@ public class CatFoodHelper {
 
     private static void applyProxy(SharedConfig.ProxyInfo current, ArrayList<SharedConfig.ProxyInfo> allList) {
         if (current == null) {
+            CatFoodLog.w("applyProxy 传入的 current 为 null");
             return;
         }
+
+        String nodeName = !TextUtils.isEmpty(current.username) ? current.username : (current.address + ":" + current.port);
+        CatFoodLog.i(String.format("正在应用节点: [%s] -> %s:%d, secret=%s", nodeName, current.address, current.port, (TextUtils.isEmpty(current.secret) ? "无" : "有")));
 
         for (SharedConfig.ProxyInfo item : allList) {
             SharedConfig.addProxy(item);
@@ -648,5 +669,6 @@ public class CatFoodHelper {
         }
 
         NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
+        CatFoodLog.i("节点已激活, ConnectionsManager代理设置完成, 已通知网络层重连");
     }
 }

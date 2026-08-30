@@ -945,10 +945,22 @@ public class AndroidUtilities {
     public static File getLogsDir() {
         try {
             if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+                File pubDownload = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                if (pubDownload != null) {
+                    File dir = new File(pubDownload, "NekoTale/log");
+                    if (!dir.exists()) {
+                        dir.mkdirs();
+                    }
+                    if (dir.exists()) {
+                        return dir;
+                    }
+                }
                 File path = ApplicationLoader.applicationContext.getExternalFilesDir(null);
-                File dir = new File(path.getAbsolutePath() + "/logs");
-                dir.mkdirs();
-                return dir;
+                if (path != null) {
+                    File dir = new File(path.getAbsolutePath() + "/logs");
+                    dir.mkdirs();
+                    return dir;
+                }
             }
         } catch (Exception e) {
 
