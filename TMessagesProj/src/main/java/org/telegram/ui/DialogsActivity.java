@@ -13812,13 +13812,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             Bundle args = new Bundle();
             presentFragment(new GroupCreateActivity(args));
         });
-        if (NekoConfig.hideBottomNavigationBar) {
-            io.add(R.drawable.msg_contacts, getString(R.string.Contacts), () -> {
-                Bundle args = new Bundle();
-                args.putBoolean("needPhonebook", true);
-                args.putBoolean("needFinishFragment", false);
-                presentFragment(new ContactsActivity(args));
-            });
+        if (NekoConfig.hideBottomNavigationBar && getUserConfig().showCallsTab) {
             io.add(R.drawable.msg_calls, getString(R.string.Calls), () -> {
                 presentFragment(new CallLogActivity());
             });

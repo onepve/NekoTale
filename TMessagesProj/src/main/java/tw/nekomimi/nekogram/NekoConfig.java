@@ -97,7 +97,7 @@ public class NekoConfig {
     public static boolean formatTimeWithSeconds = false;
     public static boolean gooeyAvatarAnimation = true;
     public static boolean hideAllTab = false;
-    public static boolean hideBottomNavigationBar = false;
+    public static boolean hideBottomNavigationBar = true;
     public static boolean hideChannelBottomButtons = false;
     public static boolean hideKeyboardOnChatScroll = false;
     public static boolean hideStories = false;
@@ -201,7 +201,7 @@ public class NekoConfig {
             formatTimeWithSeconds = preferences.getBoolean("formatTimeWithSeconds", false);
             gooeyAvatarAnimation = preferences.getBoolean("gooeyAvatarAnimation", true);
             hideAllTab = preferences.getBoolean("hideAllTab", false);
-            hideBottomNavigationBar = preferences.getBoolean("hideBottomNavigationBar", false);
+            hideBottomNavigationBar = preferences.getBoolean("hideBottomNavigationBar", true);
             hideChannelBottomButtons = preferences.getBoolean("hideChannelBottomButtons", false);
             hideKeyboardOnChatScroll = preferences.getBoolean("hideKeyboardOnChatScroll", false);
             hideStories = preferences.getBoolean("hideStories", false);
