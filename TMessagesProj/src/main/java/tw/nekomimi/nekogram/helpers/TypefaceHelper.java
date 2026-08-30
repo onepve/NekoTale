@@ -64,7 +64,7 @@ public class TypefaceHelper {
     }
 
     public static SpannableStringBuilder getTitleText() {
-        var builder = new SpannableStringBuilder(getString(R.string.AppName));
+        var builder = new SpannableStringBuilder(LocaleController.getString("AppNameNeko", R.string.AppNameNeko));
         builder.setSpan(new LeadingMarginSpan.Standard(dp(2), 0), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         builder.setSpan(new TypefaceSpan(TypefaceHelper.createTypeface(600, false), 0, Theme.key_telegram_color_dialogsLogo, null), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return builder;
