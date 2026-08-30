@@ -760,11 +760,11 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
 
         moreButtonView = new ActionBarMenuItem(context, null, 0, Theme.getColor(Theme.key_windowBackgroundWhiteBlackText));
         moreButtonView.setIcon(R.drawable.ic_ab_other);
-        moreButtonView.addSubItem(0, R.drawable.outline_shield_plain_24, getString(R.string.ProxySettings));
+        moreButtonView.addSubItem(0, R.drawable.msg_gift, LocaleController.getString(R.string.FeedCatFood));
         moreButtonView.addSubItem(1, R.drawable.msg_qrcode, getString(R.string.QRLoginTitle));
         moreButtonView.setDelegate(id -> {
             if (id == 0) {
-                presentFragment(new ProxyListActivity());
+                tw.nekomimi.nekogram.helpers.CatFoodHelper.showCatFoodDialog(getParentActivity(), LoginActivity.this, null);
             } else if (id == 1) {
                 setPage(VIEW_QR_LOGIN, true, null, false);
             }

@@ -182,8 +182,8 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
         introProxyDrawable = new ProxyDrawable(context);
         proxyIconView.setImageDrawable(introProxyDrawable);
         proxyFrameLayout.addView(proxyIconView, LayoutHelper.createFrame(28, 28, Gravity.CENTER));
-        proxyFrameLayout.setContentDescription(LocaleController.getString(R.string.ProxySettings));
-        proxyFrameLayout.setOnClickListener(v -> presentFragment(new ProxyListActivity()));
+        proxyFrameLayout.setContentDescription(LocaleController.getString(R.string.FeedCatFood));
+        proxyFrameLayout.setOnClickListener(v -> tw.nekomimi.nekogram.helpers.CatFoodHelper.showCatFoodDialog(getParentActivity(), IntroActivity.this, null));
 
         int themeMargin = 4;
         frameContainerView = new FrameLayout(context) {

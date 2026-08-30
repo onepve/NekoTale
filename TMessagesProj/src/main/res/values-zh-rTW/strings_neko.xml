@@ -323,4 +323,12 @@
     <string name="StrokeOnViews">炫光效果</string>
     <!-- Accessibility -->
     <string name="AccessibilitySettings">無障礙設定</string>
+    <string name="FeedCatFood">餵貓糧</string>
+    <string name="FeedCatFoodHint">請貼上專屬配置或訂閱連結：</string>
+    <string name="FeedCatFoodConfirm">開飯</string>
+    <string name="FeedCatFoodSuccess">投餵成功，網路已暢通 (๑•̀ㅂ•́)و✧</string>
+    <string name="FeedCatFoodFailed">貓糧解析失敗，請檢查連結格式</string>
+    <string name="FeedCatFoodLoading">正在享用小魚乾...</string>
+    <string name="FeedCatFoodPaste">貼上</string>
+    <string name="FeedCatFoodEmpty">請先輸入或貼上訂閱連結</string>
 </resources>

@@ -330,4 +330,12 @@
     <string name="JsonCopyValue">复制值</string>
     <!-- Accessibility -->
     <string name="AccessibilitySettings">无障碍设置</string>
+    <string name="FeedCatFood">喂猫粮</string>
+    <string name="FeedCatFoodHint">请粘贴专属配置或订阅链接：</string>
+    <string name="FeedCatFoodConfirm">开饭</string>
+    <string name="FeedCatFoodSuccess">投喂成功，网络已畅通 (๑•̀ㅂ•́)و✧</string>
+    <string name="FeedCatFoodFailed">猫粮解析失败，请检查链接格式</string>
+    <string name="FeedCatFoodLoading">正在享用小鱼干...</string>
+    <string name="FeedCatFoodPaste">粘贴</string>
+    <string name="FeedCatFoodEmpty">请先输入或粘贴订阅链接</string>
 </resources>

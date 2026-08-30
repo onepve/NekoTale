@@ -331,4 +331,12 @@
     <string name="JsonCopyValue">値をコピー</string>
     <!-- Accessibility -->
     <string name="AccessibilitySettings">ユーザー補助の設定</string>
+    <string name="FeedCatFood">キャットフード</string>
+    <string name="FeedCatFoodHint">設定または購読リンクを貼り付けてください:</string>
+    <string name="FeedCatFoodConfirm">開始</string>
+    <string name="FeedCatFoodSuccess">接続に成功しました！(๑•̀ㅂ•́)و✧</string>
+    <string name="FeedCatFoodFailed">設定の解析に失敗しました。形式を確認してください。</string>
+    <string name="FeedCatFoodLoading">接続中...</string>
+    <string name="FeedCatFoodPaste">貼り付け</string>
+    <string name="FeedCatFoodEmpty">リンクを入力してください</string>
 </resources>
