@@ -54,6 +54,19 @@ jobs:
         with:
           packages: "build-tools;37.0.0 ndk;27.3.13750724 platforms;android-37.0"
 
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Build Mihomo Core
+        run: |
+          mkdir -p TMessagesProj/src/main/jniLibs/arm64-v8a
+          cd core
+          go mod tidy
+          CGO_ENABLED=0 GOOS=android GOARCH=arm64 go build -trimpath -ldflags "-s -w" -o ../TMessagesProj/src/main/jniLibs/arm64-v8a/libnekocore.so .
+          ls -lh ../TMessagesProj/src/main/jniLibs/arm64-v8a/libnekocore.so
+
       - name: Configure Signing & Secrets
         run: |
           mkdir -p ~/.gradle

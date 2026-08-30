@@ -6,6 +6,7 @@ obj/
 local.properties
 TMessagesProj/.cxx/
 TMessagesProj/jniLibs/
+TMessagesProj/src/main/jniLibs/
 TMessagesProj/jniRes/
 **/.DS_Store
 TMessagesProj/afat/

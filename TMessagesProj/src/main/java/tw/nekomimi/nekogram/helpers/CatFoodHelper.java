@@ -285,6 +285,7 @@ public class CatFoodHelper {
 
             if (!parsedList.isEmpty()) {
                 success = true;
+                MessagesController.getGlobalMainSettings().edit().putString("cat_food_raw", fetchedData).apply();
                 applyProxy(parsedList.get(0), parsedList);
             } else {
                 CatFoodLog.w("未能解析出任何有效代理节点");
@@ -632,43 +633,71 @@ public class CatFoodHelper {
         for (SharedConfig.ProxyInfo item : allList) {
             SharedConfig.addProxy(item);
         }
-        SharedConfig.currentProxy = SharedConfig.addProxy(current);
 
-        SharedPreferences.Editor editor = MessagesController.getGlobalMainSettings().edit();
-        editor.putBoolean("proxy_enabled", true);
-        editor.putString("proxy_ip", current.address);
-        editor.putInt("proxy_port", current.port);
+        // 如果是 MTProto (有 secret)，走 Telegram 原生协议直连
         if (!TextUtils.isEmpty(current.secret)) {
+            SharedConfig.currentProxy = SharedConfig.addProxy(current);
+            SharedPreferences.Editor editor = MessagesController.getGlobalMainSettings().edit();
+            editor.putBoolean("proxy_enabled", true);
+            editor.putString("proxy_ip", current.address);
+            editor.putInt("proxy_port", current.port);
             editor.putString("proxy_secret", current.secret);
             editor.remove("proxy_user");
             editor.remove("proxy_pass");
+            editor.commit();
+
+            SharedConfig.saveProxyList();
+            ConnectionsManager.setProxySettings(true, current.address, current.port, current.username, current.password, current.secret);
+            for (int a = 0; a < UserConfig.MAX_ACCOUNT_COUNT; a++) {
+                ConnectionsManager.native_resumeNetwork(a, false);
+                try {
+                    ConnectionsManager.getInstance(a).updateDcSettings();
+                } catch (Exception ignore) {}
+            }
+            NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
+            CatFoodLog.i("MTProto 节点已激活直连");
         } else {
-            editor.remove("proxy_secret");
-            if (TextUtils.isEmpty(current.username)) {
-                editor.remove("proxy_user");
-            } else {
-                editor.putString("proxy_user", current.username);
+            // 其它协议 (HY2 / VLESS / Trojan / SS / Clash)，启动本地 Mihomo 内核进行全协议桥接
+            String rawData = MessagesController.getGlobalMainSettings().getString("cat_food_raw", "");
+            boolean coreStarted = CatFoodCoreManager.startCoreWithNode(ApplicationLoader.applicationContext, rawData, current.username);
+            if (!coreStarted) {
+                CatFoodLog.w("Mihomo 内核启动未就绪，使用回退直连配置");
+                SharedConfig.currentProxy = SharedConfig.addProxy(current);
+                ConnectionsManager.setProxySettings(true, current.address, current.port, current.username, current.password, current.secret);
             }
-            if (TextUtils.isEmpty(current.password)) {
-                editor.remove("proxy_pass");
-            } else {
-                editor.putString("proxy_pass", current.password);
+            NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
+        }
+    }
+
+    public static void showLogsDialog(Context context) {
+        if (context == null) return;
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("猫猫物语 · 运行日志");
+
+        android.widget.ScrollView scrollView = new android.widget.ScrollView(context);
+        scrollView.setPadding(dp(16), dp(10), dp(16), dp(10));
+
+        TextView tv = new TextView(context);
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+        tv.setTextColor(Theme.getColor(Theme.key_dialogTextBlack));
+        tv.setTextIsSelectable(true);
+
+        String logs = CatFoodLog.getLogsText();
+        if (TextUtils.isEmpty(logs)) {
+            logs = "暂无日志记录。可点击【喂猫粮】重新投喂或选择节点。";
+        }
+        tv.setText(logs);
+        scrollView.addView(tv);
+
+        builder.setView(scrollView);
+        builder.setPositiveButton(LocaleController.getString(R.string.OK), null);
+        builder.setNeutralButton("复制日志", (dialog, which) -> {
+            ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            if (cm != null) {
+                cm.setPrimaryClip(ClipData.newPlainText("catfood_logs", CatFoodLog.getLogsText()));
+                Toast.makeText(context, "日志已复制到剪贴板", Toast.LENGTH_SHORT).show();
             }
-        }
-        editor.commit();
-
-        SharedConfig.saveProxyList();
-
-        ConnectionsManager.setProxySettings(true, current.address, current.port, current.username, current.password, current.secret);
-
-        for (int a = 0; a < UserConfig.MAX_ACCOUNT_COUNT; a++) {
-            ConnectionsManager.native_resumeNetwork(a, false);
-            try {
-                ConnectionsManager.getInstance(a).updateDcSettings();
-            } catch (Exception ignore) {}
-        }
-
-        NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
-        CatFoodLog.i("节点已激活, ConnectionsManager代理设置完成, 已通知网络层重连");
+        });
+        builder.show();
     }
 }
