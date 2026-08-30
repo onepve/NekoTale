@@ -89,18 +89,27 @@ public class CatFoodHelper {
         fieldBackground.setColor(Theme.multAlpha(Theme.getColor(Theme.key_dialogTextBlack, resourcesProvider), 0.06f));
         editText.setBackground(fieldBackground);
 
-        // Auto paste from clipboard if available on dialog opening
+        // Load saved subscription URL if available
+        String savedFeedUrl = MessagesController.getGlobalMainSettings().getString("cat_food_url", "");
+        if (!TextUtils.isEmpty(savedFeedUrl)) {
+            editText.setText(savedFeedUrl);
+            editText.setSelection(savedFeedUrl.length());
+        }
+
+        // Auto paste from clipboard if available on dialog opening and editText is empty
         try {
-            ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-            if (clipboard != null && clipboard.hasPrimaryClip()) {
-                ClipData clip = clipboard.getPrimaryClip();
-                if (clip != null && clip.getItemCount() > 0) {
-                    CharSequence clipText = clip.getItemAt(0).getText();
-                    if (clipText != null) {
-                        String s = clipText.toString().trim();
-                        if (s.startsWith("http://") || s.startsWith("https://") || s.startsWith("tg://") || s.startsWith("socks5://") || s.startsWith("vmess://") || s.startsWith("ss://")) {
-                            editText.setText(s);
-                            editText.setSelection(s.length());
+            if (TextUtils.isEmpty(editText.getText())) {
+                ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                if (clipboard != null && clipboard.hasPrimaryClip()) {
+                    ClipData clip = clipboard.getPrimaryClip();
+                    if (clip != null && clip.getItemCount() > 0) {
+                        CharSequence clipText = clip.getItemAt(0).getText();
+                        if (clipText != null) {
+                            String s = clipText.toString().trim();
+                            if (s.startsWith("http://") || s.startsWith("https://") || s.startsWith("tg://") || s.startsWith("socks5://") || s.startsWith("vmess://") || s.startsWith("ss://")) {
+                                editText.setText(s);
+                                editText.setSelection(s.length());
+                            }
                         }
                     }
                 }
@@ -214,6 +223,10 @@ public class CatFoodHelper {
             return;
         }
 
+        if (rawInput.startsWith("http://") || rawInput.startsWith("https://")) {
+            MessagesController.getGlobalMainSettings().edit().putString("cat_food_url", rawInput.trim()).apply();
+        }
+
         AlertDialog progressDialog = new AlertDialog(context, 3);
         progressDialog.setMessage(LocaleController.getString(R.string.FeedCatFoodLoading));
         progressDialog.setCanceledOnTouchOutside(false);
@@ -255,18 +268,61 @@ public class CatFoodHelper {
             }
 
             final boolean finalSuccess = success;
+            final ArrayList<SharedConfig.ProxyInfo> finalParsedList = parsedList;
             AndroidUtilities.runOnUIThread(() -> {
                 try {
                     progressDialog.dismiss();
                 } catch (Exception ignore) {}
 
                 if (finalSuccess) {
-                    Toast.makeText(context, LocaleController.getString(R.string.FeedCatFoodSuccess), Toast.LENGTH_LONG).show();
+                    if (finalParsedList.size() > 1) {
+                        showNodeSelectionDialog(context, finalParsedList);
+                    } else {
+                        Toast.makeText(context, LocaleController.getString(R.string.FeedCatFoodSuccess), Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     Toast.makeText(context, LocaleController.getString(R.string.FeedCatFoodFailed), Toast.LENGTH_LONG).show();
                 }
             });
         });
+    }
+
+    public static void showNodeSelectionDialog(Context context) {
+        ArrayList<SharedConfig.ProxyInfo> list = SharedConfig.proxyList;
+        if (list == null || list.isEmpty()) {
+            Toast.makeText(context, LocaleController.getString(R.string.NoProxyFound), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        showNodeSelectionDialog(context, list);
+    }
+
+    public static void showNodeSelectionDialog(Context context, ArrayList<SharedConfig.ProxyInfo> list) {
+        if (context == null || list == null || list.isEmpty()) {
+            return;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(LocaleController.getString(R.string.FeedCatFoodSelectNode));
+
+        CharSequence[] items = new CharSequence[list.size()];
+        int selectedIndex = 0;
+        for (int i = 0; i < list.size(); i++) {
+            SharedConfig.ProxyInfo info = list.get(i);
+            String name = !TextUtils.isEmpty(info.username) && !info.username.contains("=") ? info.username : (info.address + ":" + info.port);
+            items[i] = name;
+            if (SharedConfig.currentProxy == info || (SharedConfig.currentProxy != null && TextUtils.equals(SharedConfig.currentProxy.address, info.address) && SharedConfig.currentProxy.port == info.port)) {
+                selectedIndex = i;
+            }
+        }
+
+        builder.setSingleChoiceItems(items, selectedIndex, (dialog, which) -> {
+            if (which >= 0 && which < list.size()) {
+                applyProxy(list.get(which), list);
+                Toast.makeText(context, LocaleController.getString(R.string.FeedCatFoodSuccess), Toast.LENGTH_SHORT).show();
+            }
+            dialog.dismiss();
+        });
+        builder.setNegativeButton(LocaleController.getString(R.string.Cancel), null);
+        builder.show();
     }
 
     private static ArrayList<SharedConfig.ProxyInfo> parseProxies(String data) {

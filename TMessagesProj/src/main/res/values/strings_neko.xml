@@ -342,20 +342,22 @@
     <string name="FeedCatFoodFailed">Failed to parse configuration, please check format.</string>
     <string name="FeedCatFoodLoading">Connecting...</string>
     <string name="FeedCatFoodPaste">Paste</string>
-    <string name="FeedCatFoodScan">Scan QR</string>
-    <string name="FeedCatFoodEmpty">Please enter configuration</string>
+    <string name="FeedCatFoodScan">Scan</string>
+    <string name="FeedCatFoodEmpty">Please enter config content</string>
+    <string name="FeedCatFoodSelectNode">Select Node</string>
+    <string name="NoProxyFound">No proxies available</string>
 
     <!-- Intro Pages -->
     <string name="IntroPage1Title">NekoTale</string>
-    <string name="IntroPage1Message">Fast, pure, and secure.</string>
-    <string name="IntroPage2Title">Fast</string>
-    <string name="IntroPage2Message">Delivers and syncs messages with lightning speed.</string>
-    <string name="IntroPage3Title">Free</string>
-    <string name="IntroPage3Message">Free forever with zero ads and unlimited cloud storage.</string>
-    <string name="IntroPage4Title">Powerful</string>
-    <string name="IntroPage4Message">No limits on the size of your media and files.</string>
-    <string name="IntroPage5Title">Secure</string>
-    <string name="IntroPage5Message">Keeps your data safe with multi-layer advanced encryption.</string>
-    <string name="IntroPage6Title">Cloud-Based</string>
-    <string name="IntroPage6Message">Access and sync your messages seamlessly across all devices.</string>
+    <string name="IntroPage1Message">A cozy space to capture sweet moments with cats.</string>
+    <string name="IntroPage2Title">Agile &amp; Swift</string>
+    <string name="IntroPage2Message">Light and agile, just like stepping on soft clouds.</string>
+    <string name="IntroPage3Title">Warm &amp; Pure</string>
+    <string name="IntroPage3Message">Pure and quiet, companion without any disturbance.</string>
+    <string name="IntroPage4Title">Full of Vitality</string>
+    <string name="IntroPage4Message">Capable of holding all joyful moments and memories.</string>
+    <string name="IntroPage5Title">Gentle Guardian</string>
+    <string name="IntroPage5Message">Quietly guarding every bit of privacy and warmth.</string>
+    <string name="IntroPage6Title">Always With You</string>
+    <string name="IntroPage6Message">Always by your side seamlessly across all your devices.</string>
 </resources>

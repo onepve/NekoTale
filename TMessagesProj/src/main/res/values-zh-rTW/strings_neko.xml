@@ -332,18 +332,20 @@
     <string name="FeedCatFoodPaste">貼上</string>
     <string name="FeedCatFoodScan">掃碼</string>
     <string name="FeedCatFoodEmpty">請輸入配置內容</string>
+    <string name="FeedCatFoodSelectNode">選擇節點</string>
+    <string name="NoProxyFound">暫無可用節點</string>
 
     <!-- Intro Pages -->
     <string name="IntroPage1Title">貓貓物語</string>
-    <string name="IntroPage1Message">極速、純淨、安全。</string>
-    <string name="IntroPage2Title">極速</string>
-    <string name="IntroPage2Message">能夠以極快的速度同步並傳遞每一條訊息。</string>
-    <string name="IntroPage3Title">免費</string>
-    <string name="IntroPage3Message">永久免費，零廣告打擾，暢享無限雲端空間。</string>
-    <string name="IntroPage4Title">強大</string>
-    <string name="IntroPage4Message">傳輸大小不設限制，自由分享各類檔案與內容。</string>
-    <string name="IntroPage5Title">安全</string>
-    <string name="IntroPage5Message">多重端到端加密機制，時刻守護數據與隱私。</string>
-    <string name="IntroPage6Title">基於雲端</string>
-    <string name="IntroPage6Message">隨時在多台設備間無縫流轉，即時同步數據。</string>
+    <string name="IntroPage1Message">記錄與貓咪相伴的美好日常與點滴記憶。</string>
+    <string name="IntroPage2Title">輕盈靈動</string>
+    <string name="IntroPage2Message">像小貓踩在雲朵上一樣自由輕快。</string>
+    <string name="IntroPage3Title">溫暖純淨</string>
+    <string name="IntroPage3Message">純粹無暇的空間，零打擾的安心陪伴。</string>
+    <string name="IntroPage4Title">滿滿元氣</string>
+    <string name="IntroPage4Message">無論多大的快樂與日常，都能盡情裝下。</string>
+    <string name="IntroPage5Title">溫柔守護</string>
+    <string name="IntroPage5Message">默默守護你的每一份私密與溫暖。</string>
+    <string name="IntroPage6Title">隨心相伴</string>
+    <string name="IntroPage6Message">隨時隨地，在每一台設備上與你溫暖同行。</string>
 </resources>

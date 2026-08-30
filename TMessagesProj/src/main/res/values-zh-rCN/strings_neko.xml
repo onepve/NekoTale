@@ -347,17 +347,17 @@
     <string name="Page6Message">随时在多台设备间无缝流转，实时同步数据。</string>
 
     <string name="IntroPage1Title">猫猫物语</string>
-    <string name="IntroPage1Message">极速、纯净、安全。</string>
-    <string name="IntroPage2Title">极速</string>
-    <string name="IntroPage2Message">能够以极快的速度同步并传递每一条消息。</string>
-    <string name="IntroPage3Title">免费</string>
-    <string name="IntroPage3Message">永久免费，零广告打扰，畅享无限云端空间。</string>
-    <string name="IntroPage4Title">强大</string>
-    <string name="IntroPage4Message">传输大小不设限制，自由分享各类文件与内容。</string>
-    <string name="IntroPage5Title">安全</string>
-    <string name="IntroPage5Message">多重端到端加密机制，时刻守护数据与隐私。</string>
-    <string name="IntroPage6Title">基于云端</string>
-    <string name="IntroPage6Message">随时在多台设备间无缝流转，实时同步数据。</string>
+    <string name="IntroPage1Message">记录与猫咪相伴的美好日常与点滴记忆。</string>
+    <string name="IntroPage2Title">轻盈灵动</string>
+    <string name="IntroPage2Message">像小猫踩在云朵上一样自由轻快。</string>
+    <string name="IntroPage3Title">温暖纯净</string>
+    <string name="IntroPage3Message">纯粹无瑕的空间，零打扰的安心陪伴。</string>
+    <string name="IntroPage4Title">满满元气</string>
+    <string name="IntroPage4Message">无论多大的快乐与日常，都能尽情装下。</string>
+    <string name="IntroPage5Title">温柔守护</string>
+    <string name="IntroPage5Message">默默守护你的每一份私密与温暖。</string>
+    <string name="IntroPage6Title">随心相伴</string>
+    <string name="IntroPage6Message">随时随地，在每一台设备上与你温暖同行。</string>
     <string name="YourPhone">你的手机号码</string>
     <string name="StartText">请确认国家代码并输入你的手机号码。</string>
     <string name="ChooseCountry">选择国家/地区</string>
@@ -383,4 +383,6 @@
     <string name="FeedCatFoodPaste">粘贴</string>
     <string name="FeedCatFoodScan">扫码</string>
     <string name="FeedCatFoodEmpty">请输入配置内容</string>
+    <string name="FeedCatFoodSelectNode">选择节点</string>
+    <string name="NoProxyFound">暂无可用节点</string>
 </resources>

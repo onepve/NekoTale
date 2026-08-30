@@ -340,18 +340,20 @@
     <string name="FeedCatFoodPaste">貼り付け</string>
     <string name="FeedCatFoodScan">QRスキャン</string>
     <string name="FeedCatFoodEmpty">設定内容を入力してください</string>
+    <string name="FeedCatFoodSelectNode">ノード選択</string>
+    <string name="NoProxyFound">利用可能なノードがありません</string>
 
     <!-- Intro Pages -->
     <string name="IntroPage1Title">NekoTale</string>
-    <string name="IntroPage1Message">高速、安全、プライベート。</string>
-    <string name="IntroPage2Title">高速</string>
-    <string name="IntroPage2Message">超高速でメッセージを同期・配信します。</string>
-    <string name="IntroPage3Title">無料</string>
-    <string name="IntroPage3Message">完全無料・広告なし、無制限のクラウドストレージ。</string>
-    <string name="IntroPage4Title">強力</string>
-    <string name="IntroPage4Message">メディアやファイルの容量制限はありません。</string>
-    <string name="IntroPage5Title">安全</string>
-    <string name="IntroPage5Message">高度な暗号化により、データとプライバシーを保護します。</string>
-    <string name="IntroPage6Title">クラウド対応</string>
-    <string name="IntroPage6Message">複数のデバイスからいつでもシームレスに同期。</string>
+    <string name="IntroPage1Message">猫との素敵な日常と温かい思い出を記録。</string>
+    <string name="IntroPage2Title">軽やか</string>
+    <string name="IntroPage2Message">雲の上を歩く子猫のように軽快で自由。</string>
+    <string name="IntroPage3Title">温かく純粋</string>
+    <string name="IntroPage3Message">広告なしの静かな空間、いつでもそばに。</string>
+    <string name="IntroPage4Title">元気いっぱい</string>
+    <string name="IntroPage4Message">たくさんの思い出と日常をたっぷり詰め込めます。</string>
+    <string name="IntroPage5Title">優しい見守り</string>
+    <string name="IntroPage5Message">大切なプライバシーと温もりを静かに保護。</string>
+    <string name="IntroPage6Title">いつでも一緒</string>
+    <string name="IntroPage6Message">複数のデバイスからいつでもシームレスに寄り添います。</string>
 </resources>
