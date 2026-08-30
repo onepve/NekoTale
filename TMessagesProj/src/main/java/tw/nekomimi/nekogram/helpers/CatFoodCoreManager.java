@@ -111,7 +111,18 @@ public class CatFoodCoreManager {
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
                     String line;
                     while ((line = reader.readLine()) != null) {
-                        CatFoodLog.d("[Core] " + line);
+                        // 过滤高频常规数据流和初始化细节，只显示关键警告、错误、启动与就绪信息
+                        if (line.contains("[TCP]") && line.contains("match Match") && !line.contains("error") && !line.contains("timeout")) {
+                            continue;
+                        }
+                        if (line.contains("Geodata Loader") || line.contains("Geosite Matcher") || line.contains("Sniffer is closed") || line.contains("compatible provider") || line.contains("can't open cache file")) {
+                            continue;
+                        }
+                        if (line.contains("level=warning") || line.contains("level=error") || line.contains("error:") || line.contains("timeout")) {
+                            CatFoodLog.w("[Core] " + line);
+                        } else {
+                            CatFoodLog.i("[Core] " + line);
+                        }
                     }
                 } catch (Exception ignore) {}
             });
