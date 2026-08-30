@@ -304,17 +304,14 @@ public class CatFoodHelper {
         builder.setTitle(LocaleController.getString(R.string.FeedCatFoodSelectNode));
 
         CharSequence[] items = new CharSequence[list.size()];
-        int selectedIndex = 0;
         for (int i = 0; i < list.size(); i++) {
             SharedConfig.ProxyInfo info = list.get(i);
             String name = !TextUtils.isEmpty(info.username) && !info.username.contains("=") ? info.username : (info.address + ":" + info.port);
-            items[i] = name;
-            if (SharedConfig.currentProxy == info || (SharedConfig.currentProxy != null && TextUtils.equals(SharedConfig.currentProxy.address, info.address) && SharedConfig.currentProxy.port == info.port)) {
-                selectedIndex = i;
-            }
+            boolean isCurrent = SharedConfig.currentProxy == info || (SharedConfig.currentProxy != null && TextUtils.equals(SharedConfig.currentProxy.address, info.address) && SharedConfig.currentProxy.port == info.port);
+            items[i] = (isCurrent ? "✓ " : "  ") + name;
         }
 
-        builder.setSingleChoiceItems(items, selectedIndex, (dialog, which) -> {
+        builder.setItems(items, (dialog, which) -> {
             if (which >= 0 && which < list.size()) {
                 applyProxy(list.get(which), list);
                 Toast.makeText(context, LocaleController.getString(R.string.FeedCatFoodSuccess), Toast.LENGTH_SHORT).show();
