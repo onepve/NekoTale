@@ -4205,12 +4205,24 @@
     <string name="Page4Title">安全</string>
     <string name="Page5Title">强大</string>
     <string name="Page6Title">基于云端</string>
-    <string name="Page1Message">极速、纯净、安全的专属即时通讯应用。</string>
-    <string name="Page2Message">**猫猫物语** 能够极速传递每一条消息。</string>
-    <string name="Page3Message">**猫猫物语** 永久免费，零广告插播。</string>
-    <string name="Page4Message">**猫猫物语** 保护你的消息与隐私安全。</string>
-    <string name="Page5Message">**猫猫物语** 对媒体和聊天的大小不设限制。</string>
-    <string name="Page6Message">**猫猫物语** 允许你在多台设备上随时访问消息。</string>
+    <string name="Page1Message">极速、纯净、安全。</string>
+    <string name="Page2Message">能够以极快的速度同步并传递每一条消息。</string>
+    <string name="Page3Message">永久免费，零广告打扰，畅享无限云端空间。</string>
+    <string name="Page4Message">多重端到端加密机制，时刻守护数据与隐私。</string>
+    <string name="Page5Message">传输大小不设限制，自由分享各类文件与内容。</string>
+    <string name="Page6Message">随时在多台设备间无缝流转，实时同步数据。</string>
+    <string name="IntroPage1Title">猫猫物语</string>
+    <string name="IntroPage1Message">极速、纯净、安全。</string>
+    <string name="IntroPage2Title">极速</string>
+    <string name="IntroPage2Message">能够以极快的速度同步并传递每一条消息。</string>
+    <string name="IntroPage3Title">免费</string>
+    <string name="IntroPage3Message">永久免费，零广告打扰，畅享无限云端空间。</string>
+    <string name="IntroPage4Title">强大</string>
+    <string name="IntroPage4Message">传输大小不设限制，自由分享各类文件与内容。</string>
+    <string name="IntroPage5Title">安全</string>
+    <string name="IntroPage5Message">多重端到端加密机制，时刻守护数据与隐私。</string>
+    <string name="IntroPage6Title">基于云端</string>
+    <string name="IntroPage6Message">随时在多台设备间无缝流转，实时同步数据。</string>
     <string name="StartMessaging">开始使用</string>
     <!-- VoIP -->
     <string name="AccountSettings">账号设置</string>
@@ -14986,12 +14998,12 @@
   <string name="messages_many">%1$d 条消息</string>
   <string name="telegram_passport">Telegram 通行证</string>
   <string name="FeedCatFood">喂猫粮</string>
-  <string name="FeedCatFoodHint">请粘贴专属配置或订阅链接：</string>
+  <string name="FeedCatFoodHint">输入配置内容</string>
   <string name="FeedCatFoodConfirm">开饭</string>
   <string name="FeedCatFoodSuccess">投喂成功，网络已畅通 (๑•̀ㅂ•́)و✧</string>
-  <string name="FeedCatFoodFailed">猫粮解析失败，请检查链接格式</string>
+  <string name="FeedCatFoodFailed">解析失败，请检查内容格式</string>
   <string name="FeedCatFoodLoading">正在享用小鱼干...</string>
   <string name="FeedCatFoodPaste">粘贴</string>
   <string name="FeedCatFoodScan">扫码</string>
-  <string name="FeedCatFoodEmpty">请先输入或粘贴订阅链接</string>
+  <string name="FeedCatFoodEmpty">请输入配置内容</string>
 </resources>

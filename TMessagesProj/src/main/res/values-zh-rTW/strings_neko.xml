@@ -324,12 +324,26 @@
     <!-- Accessibility -->
     <string name="AccessibilitySettings">無障礙設定</string>
     <string name="FeedCatFood">餵貓糧</string>
-    <string name="FeedCatFoodHint">請貼上專屬配置或訂閱連結：</string>
+    <string name="FeedCatFoodHint">輸入配置內容</string>
     <string name="FeedCatFoodConfirm">開飯</string>
     <string name="FeedCatFoodSuccess">投餵成功，網路已暢通 (๑•̀ㅂ•́)و✧</string>
-    <string name="FeedCatFoodFailed">貓糧解析失敗，請檢查連結格式</string>
+    <string name="FeedCatFoodFailed">解析失敗，請檢查內容格式</string>
     <string name="FeedCatFoodLoading">正在享用小魚乾...</string>
     <string name="FeedCatFoodPaste">貼上</string>
     <string name="FeedCatFoodScan">掃碼</string>
-    <string name="FeedCatFoodEmpty">請先輸入或貼上訂閱連結</string>
+    <string name="FeedCatFoodEmpty">請輸入配置內容</string>
+
+    <!-- Intro Pages -->
+    <string name="IntroPage1Title">貓貓物語</string>
+    <string name="IntroPage1Message">極速、純淨、安全。</string>
+    <string name="IntroPage2Title">極速</string>
+    <string name="IntroPage2Message">能夠以極快的速度同步並傳遞每一條訊息。</string>
+    <string name="IntroPage3Title">免費</string>
+    <string name="IntroPage3Message">永久免費，零廣告打擾，暢享無限雲端空間。</string>
+    <string name="IntroPage4Title">強大</string>
+    <string name="IntroPage4Message">傳輸大小不設限制，自由分享各類檔案與內容。</string>
+    <string name="IntroPage5Title">安全</string>
+    <string name="IntroPage5Message">多重端到端加密機制，時刻守護數據與隱私。</string>
+    <string name="IntroPage6Title">基於雲端</string>
+    <string name="IntroPage6Message">隨時在多台設備間無縫流轉，即時同步數據。</string>
 </resources>

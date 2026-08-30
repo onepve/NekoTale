@@ -141,20 +141,20 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
         MessagesController.getGlobalMainSettings().edit().putLong("intro_crashed_time", System.currentTimeMillis()).apply();
 
         titles = new CharSequence[]{
-                LocaleController.getString(R.string.AppNameNeko),
-                LocaleController.getString(R.string.Page2Title),
-                LocaleController.getString(R.string.Page3Title),
-                LocaleController.getString(R.string.Page5Title),
-                LocaleController.getString(R.string.Page4Title),
-                LocaleController.getString(R.string.Page6Title)
+                LocaleController.getString(R.string.IntroPage1Title),
+                LocaleController.getString(R.string.IntroPage2Title),
+                LocaleController.getString(R.string.IntroPage3Title),
+                LocaleController.getString(R.string.IntroPage4Title),
+                LocaleController.getString(R.string.IntroPage5Title),
+                LocaleController.getString(R.string.IntroPage6Title)
         };
         messages = new String[]{
-                LocaleController.getString(R.string.Page1Message),
-                LocaleController.getString(R.string.Page2Message),
-                LocaleController.getString(R.string.Page3Message),
-                LocaleController.getString(R.string.Page5Message),
-                LocaleController.getString(R.string.Page4Message),
-                LocaleController.getString(R.string.Page6Message)
+                LocaleController.getString(R.string.IntroPage1Message),
+                LocaleController.getString(R.string.IntroPage2Message),
+                LocaleController.getString(R.string.IntroPage3Message),
+                LocaleController.getString(R.string.IntroPage4Message),
+                LocaleController.getString(R.string.IntroPage5Message),
+                LocaleController.getString(R.string.IntroPage6Message)
         };
         return true;
     }

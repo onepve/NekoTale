@@ -332,12 +332,26 @@
     <!-- Accessibility -->
     <string name="AccessibilitySettings">ユーザー補助の設定</string>
     <string name="FeedCatFood">キャットフード</string>
-    <string name="FeedCatFoodHint">設定または購読リンクを貼り付けてください:</string>
+    <string name="FeedCatFoodHint">設定内容を入力</string>
     <string name="FeedCatFoodConfirm">開始</string>
     <string name="FeedCatFoodSuccess">接続に成功しました！(๑•̀ㅂ•́)و✧</string>
     <string name="FeedCatFoodFailed">設定の解析に失敗しました。形式を確認してください。</string>
     <string name="FeedCatFoodLoading">接続中...</string>
     <string name="FeedCatFoodPaste">貼り付け</string>
     <string name="FeedCatFoodScan">QRスキャン</string>
-    <string name="FeedCatFoodEmpty">リンクを入力してください</string>
+    <string name="FeedCatFoodEmpty">設定内容を入力してください</string>
+
+    <!-- Intro Pages -->
+    <string name="IntroPage1Title">NekoTale</string>
+    <string name="IntroPage1Message">高速、安全、プライベート。</string>
+    <string name="IntroPage2Title">高速</string>
+    <string name="IntroPage2Message">超高速でメッセージを同期・配信します。</string>
+    <string name="IntroPage3Title">無料</string>
+    <string name="IntroPage3Message">完全無料・広告なし、無制限のクラウドストレージ。</string>
+    <string name="IntroPage4Title">強力</string>
+    <string name="IntroPage4Message">メディアやファイルの容量制限はありません。</string>
+    <string name="IntroPage5Title">安全</string>
+    <string name="IntroPage5Message">高度な暗号化により、データとプライバシーを保護します。</string>
+    <string name="IntroPage6Title">クラウド対応</string>
+    <string name="IntroPage6Message">複数のデバイスからいつでもシームレスに同期。</string>
 </resources>

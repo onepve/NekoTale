@@ -2486,25 +2486,7 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
             });
 
             int bottomMargin = 72;
-            if (activityMode == MODE_LOGIN) {
-                syncContactsBox = new CheckBoxCell(context, 2);
-                syncContactsBox.setText(getString("SyncContacts", R.string.SyncContacts), "", syncContacts, false);
-                addView(syncContactsBox, LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.MATCH_PARENT, Gravity.LEFT | Gravity.TOP, 16, 0, 16 + (LocaleController.isRTL && AndroidUtilities.isSmallScreen() ? 56 : 0), 0));
-                bottomMargin -= 24;
-                syncContactsBox.setOnClickListener(v -> {
-                    if (getParentActivity() == null) {
-                        return;
-                    }
-                    CheckBoxCell cell = (CheckBoxCell) v;
-                    syncContacts = !syncContacts;
-                    cell.setChecked(syncContacts, true);
-                    if (syncContacts) {
-                        BulletinFactory.of(slideViewsContainer, null).createSimpleBulletin(R.raw.contacts_sync_on, getString("SyncContactsOn", R.string.SyncContactsOn)).show();
-                    } else {
-                        BulletinFactory.of(slideViewsContainer, null).createSimpleBulletin(R.raw.contacts_sync_off, getString("SyncContactsOff", R.string.SyncContactsOff)).show();
-                    }
-                });
-            }
+            /* syncContacts is permanently disabled for privacy protection; checkbox removed from UI */
 
             final boolean allowTestBackend = BuildConfig.DEBUG || newAccount;
             if (allowTestBackend && activityMode == MODE_LOGIN) {
@@ -8931,26 +8913,11 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
     }
 
     private void showProxyButton(boolean show, boolean animated) {
-        if (show == proxyButtonVisible) {
-            return;
+        if (proxyButtonView != null) {
+            proxyButtonView.setVisibility(View.GONE);
+            proxyButtonView.setAlpha(0f);
         }
-        if (showProxyButtonDelayed != null) {
-            AndroidUtilities.cancelRunOnUIThread(showProxyButtonDelayed);
-            showProxyButtonDelayed = null;
-        }
-        proxyButtonVisible = show;
-        proxyButtonView.clearAnimation();
-        if (animated) {
-            proxyButtonView.setVisibility(View.VISIBLE);
-            proxyButtonView.animate().alpha(show ? 1 : 0).withEndAction(() -> {
-                if (!show) {
-                    proxyButtonView.setVisibility(View.GONE);
-                }
-            }).start();
-        } else {
-            proxyButtonView.setVisibility(show ? View.VISIBLE : View.GONE);
-            proxyButtonView.setAlpha(show ? 1f : 0f);
-        }
+        proxyButtonVisible = false;
     }
 
     @Override

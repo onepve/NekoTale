@@ -318,7 +318,7 @@ public class CatFoodHelper {
 
     private static SharedConfig.ProxyInfo parseSingleLine(String line) {
         try {
-            if (line.startsWith("tg://proxy?") || line.startsWith("tg:proxy?") || line.startsWith("https://t.me/proxy?")) {
+            if (line.startsWith("tg://proxy?") || line.startsWith("tg:proxy?") || line.startsWith("https://t.me/proxy?") || line.startsWith("http://t.me/proxy?")) {
                 Uri uri = Uri.parse(line.replace("tg:proxy?", "https://t.me/proxy?").replace("tg://proxy?", "https://t.me/proxy?"));
                 String server = uri.getQueryParameter("server");
                 int port = Utilities.parseInt(uri.getQueryParameter("port"));
@@ -326,7 +326,7 @@ public class CatFoodHelper {
                 if (!TextUtils.isEmpty(server) && port > 0) {
                     return new SharedConfig.ProxyInfo(server, port, "", "", secret != null ? secret : "");
                 }
-            } else if (line.startsWith("tg://socks?") || line.startsWith("tg:socks?") || line.startsWith("https://t.me/socks?")) {
+            } else if (line.startsWith("tg://socks?") || line.startsWith("tg:socks?") || line.startsWith("https://t.me/socks?") || line.startsWith("http://t.me/socks?")) {
                 Uri uri = Uri.parse(line.replace("tg:socks?", "https://t.me/socks?").replace("tg://socks?", "https://t.me/socks?"));
                 String server = uri.getQueryParameter("server");
                 int port = Utilities.parseInt(uri.getQueryParameter("port"));
@@ -350,12 +350,21 @@ public class CatFoodHelper {
                 if (!TextUtils.isEmpty(host) && port > 0) {
                     return new SharedConfig.ProxyInfo(host, port, user, pass, "");
                 }
-            } else if (line.startsWith("ss://") || line.startsWith("trojan://") || line.startsWith("vmess://") || line.startsWith("hysteria2://") || line.startsWith("hy2://")) {
-                Uri uri = Uri.parse(line);
-                String host = uri.getHost();
-                int port = uri.getPort();
-                if (!TextUtils.isEmpty(host) && port > 0) {
-                    return new SharedConfig.ProxyInfo(host, port, "", "", "");
+            } else if (line.contains(":") && !line.contains("://")) {
+                // Support raw formats: server:port:secret or server:port:user:pass or server:port
+                String[] parts = line.split(":");
+                if (parts.length >= 3) {
+                    String host = parts[0].trim();
+                    int port = Utilities.parseInt(parts[1].trim());
+                    if (!TextUtils.isEmpty(host) && port > 0) {
+                        if (parts.length == 3) {
+                            // server:port:secret (MTProto)
+                            return new SharedConfig.ProxyInfo(host, port, "", "", parts[2].trim());
+                        } else if (parts.length == 4) {
+                            // server:port:user:pass (Socks5)
+                            return new SharedConfig.ProxyInfo(host, port, parts[2].trim(), parts[3].trim(), "");
+                        }
+                    }
                 }
             }
         } catch (Exception ignore) {}
@@ -370,7 +379,7 @@ public class CatFoodHelper {
         for (SharedConfig.ProxyInfo item : allList) {
             SharedConfig.addProxy(item);
         }
-        SharedConfig.currentProxy = current;
+        SharedConfig.currentProxy = SharedConfig.addProxy(current);
 
         // Mutual exclusion: configure the single active connection cleanly
         SharedPreferences.Editor editor = MessagesController.getGlobalMainSettings().edit();
@@ -383,19 +392,30 @@ public class CatFoodHelper {
             editor.remove("proxy_pass");
         } else {
             editor.remove("proxy_secret");
-            editor.putString("proxy_user", current.username);
-            editor.putString("proxy_pass", current.password);
+            if (TextUtils.isEmpty(current.username)) {
+                editor.remove("proxy_user");
+            } else {
+                editor.putString("proxy_user", current.username);
+            }
+            if (TextUtils.isEmpty(current.password)) {
+                editor.remove("proxy_pass");
+            } else {
+                editor.putString("proxy_pass", current.password);
+            }
         }
         editor.commit();
 
-        SharedConfig.saveConfig();
+        SharedConfig.saveProxyList();
 
         ConnectionsManager.setProxySettings(true, current.address, current.port, current.username, current.password, current.secret);
-        NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
 
-        try {
-            ConnectionsManager.getInstance(UserConfig.selectedAccount).updateDcSettings();
-            ConnectionsManager.getInstance(UserConfig.selectedAccount).checkProxy(current.address, current.port, current.username, current.password, current.secret, null);
-        } catch (Exception ignore) {}
+        for (int a = 0; a < UserConfig.MAX_ACCOUNT_COUNT; a++) {
+            ConnectionsManager.native_resumeNetwork(a, false);
+            try {
+                ConnectionsManager.getInstance(a).updateDcSettings();
+            } catch (Exception ignore) {}
+        }
+
+        NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.proxySettingsChanged);
     }
 }

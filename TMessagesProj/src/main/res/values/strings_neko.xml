@@ -336,12 +336,26 @@
     <!-- Accessibility -->
     <string name="AccessibilitySettings">Accessibility settings</string>
     <string name="FeedCatFood">Feed Cat Food</string>
-    <string name="FeedCatFoodHint">Please paste your configuration or subscription link:</string>
+    <string name="FeedCatFoodHint">Enter configuration</string>
     <string name="FeedCatFoodConfirm">Feed</string>
     <string name="FeedCatFoodSuccess">Connected successfully! (๑•̀ㅂ•́)و✧</string>
-    <string name="FeedCatFoodFailed">Failed to parse configuration, please check the link.</string>
+    <string name="FeedCatFoodFailed">Failed to parse configuration, please check format.</string>
     <string name="FeedCatFoodLoading">Connecting...</string>
     <string name="FeedCatFoodPaste">Paste</string>
     <string name="FeedCatFoodScan">Scan QR</string>
-    <string name="FeedCatFoodEmpty">Please enter or paste a link first</string>
+    <string name="FeedCatFoodEmpty">Please enter configuration</string>
+
+    <!-- Intro Pages -->
+    <string name="IntroPage1Title">NekoTale</string>
+    <string name="IntroPage1Message">Fast, pure, and secure.</string>
+    <string name="IntroPage2Title">Fast</string>
+    <string name="IntroPage2Message">Delivers and syncs messages with lightning speed.</string>
+    <string name="IntroPage3Title">Free</string>
+    <string name="IntroPage3Message">Free forever with zero ads and unlimited cloud storage.</string>
+    <string name="IntroPage4Title">Powerful</string>
+    <string name="IntroPage4Message">No limits on the size of your media and files.</string>
+    <string name="IntroPage5Title">Secure</string>
+    <string name="IntroPage5Message">Keeps your data safe with multi-layer advanced encryption.</string>
+    <string name="IntroPage6Title">Cloud-Based</string>
+    <string name="IntroPage6Message">Access and sync your messages seamlessly across all devices.</string>
 </resources>
