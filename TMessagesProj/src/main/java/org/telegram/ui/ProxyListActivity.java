@@ -106,6 +106,8 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
     @Keep
     private int catFoodSelectRow;
     @Keep
+    private int catFoodLogsRow;
+    @Keep
     private int proxyAddRow;
     private int proxyShadowRow;
     @Keep
@@ -392,21 +394,6 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
         moreItem.addSubItem(12, R.drawable.msg_settings_old, LocaleController.getString(R.string.FeedCatFoodSelectNode));
         moreItem.addSubItem(13, R.drawable.msg_log, LocaleController.getString(R.string.FeedCatFoodLogs));
 
-        actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
-            @Override
-            public void onItemClick(int id) {
-                if (id == -1) {
-                    finishFragment();
-                } else if (id == 11) {
-                    tw.nekomimi.nekogram.helpers.CatFoodHelper.showCatFoodDialog(getParentActivity(), ProxyListActivity.this, getResourceProvider());
-                } else if (id == 12) {
-                    tw.nekomimi.nekogram.helpers.CatFoodHelper.showNodeSelectionDialog(getParentActivity());
-                } else if (id == 13) {
-                    tw.nekomimi.nekogram.helpers.CatFoodHelper.showLogsDialog(getParentActivity());
-                }
-            }
-        });
-
         listAdapter = new ListAdapter(context);
 
         fragmentView = new FrameLayout(context);
@@ -531,6 +518,8 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                 tw.nekomimi.nekogram.helpers.CatFoodHelper.showCatFoodDialog(getParentActivity(), ProxyListActivity.this, getResourceProvider());
             } else if (position == catFoodSelectRow) {
                 tw.nekomimi.nekogram.helpers.CatFoodHelper.showNodeSelectionDialog(getParentActivity());
+            } else if (position == catFoodLogsRow) {
+                tw.nekomimi.nekogram.helpers.CatFoodHelper.showLogsDialog(getParentActivity());
             } else if (position == proxyAddRow) {
                 presentFragment(new ProxySettingsActivity());
             } else if (position == deleteAllRow) {
@@ -607,6 +596,15 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                         } else {
                             listAdapter.clearSelected();
                         }
+                        break;
+                    case 11:
+                        tw.nekomimi.nekogram.helpers.CatFoodHelper.showCatFoodDialog(getParentActivity(), ProxyListActivity.this, getResourceProvider());
+                        break;
+                    case 12:
+                        tw.nekomimi.nekogram.helpers.CatFoodHelper.showNodeSelectionDialog(getParentActivity());
+                        break;
+                    case 13:
+                        tw.nekomimi.nekogram.helpers.CatFoodHelper.showLogsDialog(getParentActivity());
                         break;
                     case MENU_DELETE:
                         AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
@@ -742,6 +740,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
         }
         catFoodFeedRow = rowCount++;
         catFoodSelectRow = rowCount++;
+        catFoodLogsRow = rowCount++;
         proxyAddRow = rowCount++;
         proxyShadowRow = rowCount++;
         newsList.clear();
@@ -961,6 +960,9 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                     } else if (position == catFoodSelectRow) {
                         textCell.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlueText4));
                         textCell.setText(LocaleController.getString(R.string.FeedCatFoodSelectNode), true);
+                    } else if (position == catFoodLogsRow) {
+                        textCell.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlueText4));
+                        textCell.setText(LocaleController.getString(R.string.FeedCatFoodLogs), true);
                     } else if (position == proxyAddRow) {
                         textCell.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlueText4));
                         textCell.setText(getString(R.string.AddProxy), deleteAllRow != -1);
@@ -1076,7 +1078,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
         @Override
         public boolean isEnabled(RecyclerView.ViewHolder holder) {
             int position = holder.getAdapterPosition();
-            return position == useProxyRow || position == rotationRow || position == callsRow || position == catFoodFeedRow || position == catFoodSelectRow || position == proxyAddRow || position == deleteAllRow || position >= proxyStartRow && position < proxyEndRow || position >= newsStartRow && position < newsEndRow;
+            return position == useProxyRow || position == rotationRow || position == callsRow || position == catFoodFeedRow || position == catFoodSelectRow || position == catFoodLogsRow || position == proxyAddRow || position == deleteAllRow || position >= proxyStartRow && position < proxyEndRow || position >= newsStartRow && position < newsEndRow;
         }
 
         @Override
@@ -1129,6 +1131,8 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
                 return -20;
             } else if (position == catFoodSelectRow) {
                 return -21;
+            } else if (position == catFoodLogsRow) {
+                return -22;
             } else if (position == proxyAddRow) {
                 return -3;
             } else if (position == useProxyRow) {
@@ -1160,7 +1164,7 @@ public class ProxyListActivity extends BaseFragment implements NotificationCente
         public int getItemViewType(int position) {
             if (position == useProxyShadowRow || position == proxyShadowRow || position == newsShadowRow) {
                 return VIEW_TYPE_SHADOW;
-            } else if (position == catFoodFeedRow || position == catFoodSelectRow || position == proxyAddRow || position == deleteAllRow) {
+            } else if (position == catFoodFeedRow || position == catFoodSelectRow || position == catFoodLogsRow || position == proxyAddRow || position == deleteAllRow) {
                 return VIEW_TYPE_TEXT_SETTING;
             } else if (position == useProxyRow || position == rotationRow || position == callsRow) {
                 return VIEW_TYPE_TEXT_CHECK;
