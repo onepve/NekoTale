@@ -345,6 +345,7 @@
     <string name="FeedCatFoodScan">Scan</string>
     <string name="FeedCatFoodEmpty">Please enter config content</string>
     <string name="FeedCatFoodSelectNode">Select Node</string>
+    <string name="FeedCatFoodLogs">View Runtime Logs</string>
     <string name="NoProxyFound">No proxies available</string>
 
     <!-- Intro Pages -->

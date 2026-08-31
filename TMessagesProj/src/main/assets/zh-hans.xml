@@ -15007,5 +15007,6 @@
   <string name="FeedCatFoodScan">扫码</string>
   <string name="FeedCatFoodEmpty">请输入配置内容</string>
   <string name="FeedCatFoodSelectNode">选择节点</string>
+  <string name="FeedCatFoodLogs">查看运行日志</string>
   <string name="NoProxyFound">暂无可用节点</string>
 </resources>

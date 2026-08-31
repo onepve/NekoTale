@@ -341,7 +341,8 @@
     <string name="FeedCatFoodScan">QRスキャン</string>
     <string name="FeedCatFoodEmpty">設定内容を入力してください</string>
     <string name="FeedCatFoodSelectNode">ノード選択</string>
-    <string name="NoProxyFound">利用可能なノードがありません</string>
+    <string name="FeedCatFoodLogs">ログを確認</string>
+    <string name="NoProxyFound">利用可能なプロキシがありません</string>
 
     <!-- Intro Pages -->
     <string name="IntroPage1Title">NekoTale</string>

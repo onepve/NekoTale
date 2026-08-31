@@ -333,6 +333,7 @@
     <string name="FeedCatFoodScan">掃碼</string>
     <string name="FeedCatFoodEmpty">請輸入配置內容</string>
     <string name="FeedCatFoodSelectNode">選擇節點</string>
+    <string name="FeedCatFoodLogs">查看運行日誌</string>
     <string name="NoProxyFound">暫無可用節點</string>
 
     <!-- Intro Pages -->

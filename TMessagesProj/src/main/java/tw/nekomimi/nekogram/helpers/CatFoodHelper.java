@@ -42,11 +42,14 @@ import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.CameraScanActivity;
 import org.telegram.ui.Components.EditTextBoldCursor;
 import org.telegram.ui.Components.LayoutHelper;
+import org.yaml.snakeyaml.Yaml;
 
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -421,96 +424,57 @@ public class CatFoodHelper {
     private static ArrayList<SharedConfig.ProxyInfo> parseClashYaml(String yaml) {
         ArrayList<SharedConfig.ProxyInfo> list = new ArrayList<>();
         try {
-            String[] lines = yaml.split("[\\r\\n]+");
-            String curName = "";
-            String curServer = "";
-            int curPort = 0;
-            String curPassword = "";
-            String curSecret = "";
-            String curType = "";
-            boolean inProxiesSection = false;
-
-            for (String line : lines) {
-                String stripped = line.trim();
-                if (stripped.startsWith("#") || stripped.isEmpty()) continue;
-
-                if (line.startsWith("proxies:")) {
-                    inProxiesSection = true;
-                    continue;
-                } else if (inProxiesSection && !line.startsWith(" ") && !line.startsWith("\t") && !line.startsWith("-")) {
-                    break;
-                }
-
-                if (!inProxiesSection && !yaml.contains("proxies:")) {
-                    inProxiesSection = true;
-                }
-
-                if (!inProxiesSection) continue;
-
-                if (stripped.contains("IP-CIDR") || stripped.contains("DOMAIN") || stripped.contains("GEOIP") || stripped.contains("MATCH") || stripped.contains("DIRECT") || stripped.contains("REJECT")) {
-                    continue;
-                }
-
-                // Handle inline dict: - { name: "HK", server: "1.1.1.1", port: 443, ... }
-                if (stripped.startsWith("-") && stripped.contains("{") && stripped.contains("}")) {
-                    String inside = stripped.substring(stripped.indexOf("{") + 1, stripped.lastIndexOf("}"));
-                    String[] pairs = inside.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
-                    String inName = "", inServer = "", inPw = "", inSecret = "", inType = "";
-                    int inPort = 0;
-                    for (String pair : pairs) {
-                        String[] kv = pair.split(":", 2);
-                        if (kv.length == 2) {
-                            String k = kv[0].trim().replace("\"", "").replace("'", "");
-                            String v = kv[1].trim().replace("\"", "").replace("'", "");
-                            if ("name".equalsIgnoreCase(k)) inName = v;
-                            else if ("server".equalsIgnoreCase(k)) inServer = v;
-                            else if ("port".equalsIgnoreCase(k)) inPort = Utilities.parseInt(v);
-                            else if ("password".equalsIgnoreCase(k) || "uuid".equalsIgnoreCase(k) || "auth_str".equalsIgnoreCase(k)) inPw = v;
-                            else if ("secret".equalsIgnoreCase(k)) inSecret = v;
-                            else if ("type".equalsIgnoreCase(k)) inType = v;
-                        }
-                    }
-                    if (isValidServer(inServer) && inPort > 0) {
-                        String displayName = !TextUtils.isEmpty(inName) ? inName : (inServer + ":" + inPort);
-                        list.add(new SharedConfig.ProxyInfo(inServer, inPort, displayName, inPw, inSecret));
-                    }
-                    continue;
-                }
-
-                if (stripped.startsWith("-")) {
-                    if (isValidServer(curServer) && curPort > 0) {
-                        String displayName = !TextUtils.isEmpty(curName) ? curName : (curServer + ":" + curPort);
-                        list.add(new SharedConfig.ProxyInfo(curServer, curPort, displayName, curPassword, curSecret));
-                    }
-                    curName = "";
-                    curServer = "";
-                    curPort = 0;
-                    curPassword = "";
-                    curSecret = "";
-                    curType = "";
-                }
-
-                if (stripped.contains(":")) {
-                    String[] kv = stripped.split(":", 2);
-                    String k = kv[0].replace("-", "").trim().replace("\"", "").replace("'", "");
-                    String v = kv[1].trim().replace("\"", "").replace("'", "");
-                    if ("name".equalsIgnoreCase(k)) curName = v;
-                    else if ("server".equalsIgnoreCase(k)) curServer = v;
-                    else if ("port".equalsIgnoreCase(k)) curPort = Utilities.parseInt(v);
-                    else if ("password".equalsIgnoreCase(k) || "uuid".equalsIgnoreCase(k) || "auth_str".equalsIgnoreCase(k)) curPassword = v;
-                    else if ("secret".equalsIgnoreCase(k)) curSecret = v;
-                    else if ("type".equalsIgnoreCase(k)) curType = v;
-                }
+            // 使用 SnakeYAML 严格解析，只提取 proxies 键下的数组
+            Yaml yamlParser = new Yaml();
+            Map<String, Object> config = yamlParser.load(yaml);
+            if (config == null || !config.containsKey("proxies")) {
+                return list;
             }
 
-            if (isValidServer(curServer) && curPort > 0) {
-                String displayName = !TextUtils.isEmpty(curName) ? curName : (curServer + ":" + curPort);
-                list.add(new SharedConfig.ProxyInfo(curServer, curPort, displayName, curPassword, curSecret));
+            Object proxiesObj = config.get("proxies");
+            if (!(proxiesObj instanceof List)) {
+                return list;
+            }
+
+            List<Map<String, Object>> proxies = (List<Map<String, Object>>) proxiesObj;
+            for (Map<String, Object> proxy : proxies) {
+                if (proxy == null) continue;
+
+                // 必须同时包含 server 和 port 才是有效节点
+                Object serverObj = proxy.get("server");
+                Object portObj = proxy.get("port");
+                if (serverObj == null || portObj == null) continue;
+
+                String server = serverObj.toString().trim();
+                int port;
+                try {
+                    port = Integer.parseInt(portObj.toString().trim());
+                } catch (NumberFormatException e) {
+                    continue;
+                }
+
+                if (!isValidServer(server) || port <= 0) continue;
+
+                String name = getStringValue(proxy, "name");
+                String password = getStringValue(proxy, "password");
+                if (TextUtils.isEmpty(password)) password = getStringValue(proxy, "uuid");
+                if (TextUtils.isEmpty(password)) password = getStringValue(proxy, "auth_str");
+                String secret = getStringValue(proxy, "secret");
+                String type = getStringValue(proxy, "type");
+
+                String displayName = !TextUtils.isEmpty(name) ? name : (server + ":" + port);
+                list.add(new SharedConfig.ProxyInfo(server, port, displayName, password, secret));
             }
         } catch (Exception e) {
             FileLog.e(e);
         }
         return list;
+    }
+
+    private static String getStringValue(Map<String, Object> map, String key) {
+        if (map == null || key == null) return "";
+        Object value = map.get(key);
+        return value != null ? value.toString().trim() : "";
     }
 
     private static ArrayList<SharedConfig.ProxyInfo> parseSingBoxJson(String jsonStr) {
