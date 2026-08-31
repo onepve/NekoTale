@@ -172,7 +172,3 @@
 
 -dontwarn android.support.annotation.*
 -dontwarn androidx.compose.**
--dontwarn java.beans.**
--dontwarn javax.naming.**
--dontwarn org.yaml.snakeyaml.**
--keep class org.yaml.snakeyaml.** { *; }
